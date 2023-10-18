@@ -1,5 +1,7 @@
 package com.library.binhson.userservice.config;
 
+import com.library.binhson.userservice.security.DemoFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -8,11 +10,11 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
@@ -24,31 +26,28 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
+import java.nio.file.AccessDeniedException;
+import java.util.List;
 import java.util.UUID;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
+    List<String> publicApis = List.of("/api/v1/user-service/login/**", "/oauth2/**");
     @Bean
-    @Order(1)
+    @Order(2)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
             throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
         http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-                .oidc(Customizer.withDefaults());	// Enable OpenID Connect 1.0
-        http
-                // Redirect to the login page when not authenticated from the
-                // authorization endpoint
-                .exceptionHandling((exceptions) -> exceptions
-                        .defaultAuthenticationEntryPointFor(
-                                new LoginUrlAuthenticationEntryPoint("/login"),
-                                new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
-                        )
+                .oidc(Customizer.withDefaults());
+        http.csrf(AbstractHttpConfigurer::disable)
+                .exceptionHandling((exceptions) ->new AccessDeniedException("OKOLALA")
                 )
-                // Accept access tokens for User Info and/or Client Registration
                 .oauth2ResourceServer((resourceServer) -> resourceServer
                         .jwt(Customizer.withDefaults()));
 
@@ -56,22 +55,24 @@ public class SecurityConfig {
     }
 
     @Bean
-    @Order(2)
-    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)
-            throws Exception {
+    @Order(1)
+    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests((authorize) -> authorize
-                        .anyRequest().authenticated()
-                )
-
-                .oauth2Login(Customizer.withDefaults())
-
-                // Form login handles the redirect to the login page from the
-                // authorization server filter chain
-                .formLogin(Customizer.withDefaults());
-
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests((authorize) -> {
+                    authorize.requestMatchers(publicApis.toArray(String[]::new)).permitAll();
+                    authorize.anyRequest().authenticated();
+                    }
+                );
+        http.addFilterBefore(new DemoFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers(publicApis.toArray(String[]::new));
+    }
+
 
 
 
@@ -106,21 +107,22 @@ public class SecurityConfig {
 
         return repository;
     }
-    @Bean
-    public ClientRegistrationRepository  clientRegistrationRepository(){
-        ClientRegistration githubClientRegistration= ClientRegistration.withRegistrationId(UUID.randomUUID().toString())
-                .clientId("be709d462899fd1b92f1")
-                .clientSecret("e2e48e986dddd343207a9e73a3ca591c651fb880")
-                .authorizationUri("https://github.com/login/oauth/authorize")
-                .tokenUri("https://github.com/login/oauth/access_token")
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .redirectUri("http://localhost:9999/api/v1/user-service/login/oauth2/code/github")
-                .scope(OidcScopes.OPENID)
-                .clientName("github")
-                .build();
-        return new InMemoryClientRegistrationRepository(githubClientRegistration);
-    }
+//
+//    @Bean
+//    public ClientRegistrationRepository  clientRegistrationRepository(){
+//        ClientRegistration githubClientRegistration= ClientRegistration.withRegistrationId(UUID.randomUUID().toString())
+//                .clientId("be709d462899fd1b92f1")
+//                .clientSecret("e2e48e986dddd343207a9e73a3ca591c651fb880")
+//                .authorizationUri("https://github.com/login/oauth/authorize")
+//                .tokenUri("https://github.com/login/oauth/access_token")
+//                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+//                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+//                .redirectUri("http://localhost:9999/api/v1/user-service/login/oauth2/code/github")
+//                .scope(OidcScopes.OPENID)
+//                .clientName("github")
+//                .build();
+//        return new InMemoryClientRegistrationRepository(githubClientRegistration);
+//    }
 
 
 
