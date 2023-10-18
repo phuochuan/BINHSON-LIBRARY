@@ -8,6 +8,11 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
@@ -58,6 +63,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         .anyRequest().authenticated()
                 )
+
+                .oauth2Login(Customizer.withDefaults())
+
                 // Form login handles the redirect to the login page from the
                 // authorization server filter chain
                 .formLogin(Customizer.withDefaults());
@@ -67,8 +75,10 @@ public class SecurityConfig {
 
 
 
+
     @Bean
     public RegisteredClientRepository registeredClientRepository() {
+
         RegisteredClient githubClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId("be709d462899fd1b92f1")
                 .clientSecret("e2e48e986dddd343207a9e73a3ca591c651fb880")
@@ -76,12 +86,45 @@ public class SecurityConfig {
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .redirectUri("http://localhost:9999/api/v1/user-service/login/oauth2/code/github")
                 .scope(OidcScopes.OPENID)
-                .clientName("gitHub")
+                .clientName("github")
                 .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
                 .build();
 
-        return new InMemoryRegisteredClientRepository(githubClient);
+        RegisteredClient oidcClient = RegisteredClient.withId(UUID.randomUUID().toString())
+                .clientId("oidc-client")
+                .clientSecret("{noop}secret")
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                .redirectUri("http://127.0.0.1:8080/login/oauth2/code/oidc-client")
+                .postLogoutRedirectUri("http://127.0.0.1:8080/")
+                .scope(OidcScopes.OPENID)
+                .scope(OidcScopes.PROFILE)
+                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+                .build();
+        InMemoryRegisteredClientRepository repository = new InMemoryRegisteredClientRepository(githubClient, oidcClient);
+
+        return repository;
     }
+    @Bean
+    public ClientRegistrationRepository  clientRegistrationRepository(){
+        ClientRegistration githubClientRegistration= ClientRegistration.withRegistrationId(UUID.randomUUID().toString())
+                .clientId("be709d462899fd1b92f1")
+                .clientSecret("e2e48e986dddd343207a9e73a3ca591c651fb880")
+                .authorizationUri("https://github.com/login/oauth/authorize")
+                .tokenUri("https://github.com/login/oauth/access_token")
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .redirectUri("http://localhost:9999/api/v1/user-service/login/oauth2/code/github")
+                .scope(OidcScopes.OPENID)
+                .clientName("github")
+                .build();
+        return new InMemoryClientRegistrationRepository(githubClientRegistration);
+    }
+
+
+
+
 
 //    @Bean
 //    public JWKSource<SecurityContext> jwkSource() {
