@@ -1,6 +1,5 @@
 package com.library.binhson.userservice.entity;
 
-import com.library.binhson.userservice.entity.Account;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
