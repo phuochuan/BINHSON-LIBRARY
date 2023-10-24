@@ -15,6 +15,8 @@ public class DemoFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String url=request.getServletPath();
         log.info(url);
+        log.info(request.getHeader("Authentication"));
+        log.info(request.getRequestURI());
         filterChain.doFilter(request,response);
     }
 }
