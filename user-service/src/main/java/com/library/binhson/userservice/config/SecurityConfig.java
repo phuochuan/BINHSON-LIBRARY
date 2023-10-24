@@ -80,7 +80,6 @@ public class SecurityConfig {
                     }
                 );
         http.exceptionHandling(exception->exception.accessDeniedPage("/exception/denied"));
-        http.addFilterBefore(new DemoFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
 
     }
