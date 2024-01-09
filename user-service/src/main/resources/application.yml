@@ -1,0 +1,28 @@
+
+com:
+  c4-soft:
+    springaddons:
+      oidc:
+        ops:
+          - iss: http://localhost:8442/realms/master
+            authorities:
+              - path: $.realm_access.roles
+              - path: $.ressource_access.spring-addons-confidential.roles
+            username-claim: preferred_username
+        resourceserver:
+          permit-all:
+            - /users/me
+logging:
+  level:
+    org.springframework.security: DEBUG
+keycloak:
+  auth-server-url: http://localhost:8442/realms/master/protocol/openid-connect/
+  client_id: phuochuan_client
+  grant_type: password
+  server_url: http://localhost:8442/
+  realm: master
+  client_secret:
+
+email:
+  forgot-password:
+    format-file-path: user-service/src/main/resources/static/ForgotPasswordFormatEmail.xml

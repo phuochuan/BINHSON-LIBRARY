@@ -48,6 +48,13 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-bootstrap</artifactId>
 		</dependency>
+
+
+		<dependency>
+			<groupId>org.keycloak</groupId>
+			<artifactId>keycloak-admin-client</artifactId>
+			<version>23.0.3</version>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
