@@ -26,3 +26,22 @@ keycloak:
 email:
   forgot-password:
     format-file-path: user-service/src/main/resources/static/ForgotPasswordFormatEmail.xml
+
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: phbinhthuongtam@gmail.com
+    password: sdqp qaee yaop gjje
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 7000
+          writetimeout: 7000
+          timeout: 7000
+  redis:
+    host: localhost
+    port: 6379

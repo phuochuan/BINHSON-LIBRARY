@@ -22,5 +22,6 @@ public class User {
     private Blob avatar;
     private String address;
     private Boolean isNonClocked;
-    // to do Role and Permission.
+    private String phone;
+
 }

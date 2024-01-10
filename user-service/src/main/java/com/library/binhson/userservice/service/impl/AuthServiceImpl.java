@@ -85,7 +85,7 @@ public class AuthServiceImpl implements IAuthService {
         var response = realmResource.users().create(user);
         String userId = getUserId(response);
         if (Objects.nonNull(userId)) {
-            RoleRepresentation roleRepresentation = realmResource.roles().get("user").toRepresentation();
+            RoleRepresentation roleRepresentation = realmResource.roles().get("ROLE_USER").toRepresentation();
             realmResource.users().get(userId).roles().realmLevel().add(Arrays.asList(roleRepresentation));
         }
         User myDBUser= User.builder()
