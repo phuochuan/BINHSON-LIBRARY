@@ -32,8 +32,13 @@ public class AuthController {
 
     @PostMapping("/registrations")
     ResponseEntity<?> registrations(@RequestBody RegistrationRequest registrationRequest){
-        var registrationResponse= authService.signUp(registrationRequest);
-        return ResponseEntity.ok(registrationResponse);
+        try {
+            var registrationResponse = authService.signUp(registrationRequest);
+            return ResponseEntity.ok(registrationResponse);
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     @PostMapping("/identity")

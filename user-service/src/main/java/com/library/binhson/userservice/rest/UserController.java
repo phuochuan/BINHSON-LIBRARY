@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 //    public
-    private final IUserService userService;
+//    private final IUserService userService;
 
     @GetMapping()
     public ResponseEntity<?> get(@RequestBody PageRequest pageRequest){

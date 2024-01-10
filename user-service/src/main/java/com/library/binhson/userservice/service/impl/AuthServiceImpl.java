@@ -41,7 +41,7 @@ public class AuthServiceImpl implements IAuthService {
     private final RealmResource realmResource;
     private final IEmailService emailService;
     private final UserRepository userRepository;
-    private final ConfirmTokenRepository tokenRepository;
+    private final ConfirmTokenRepository confirmTokenRepository;
     @Value("${keycloak.auth-server-url}")
     private String keycloakUrl;
     @Value("${keycloak.client_id}")
@@ -72,16 +72,7 @@ public class AuthServiceImpl implements IAuthService {
 
     @Override
     public BaseResponse signUp(RegistrationRequest registrationRequest) {
-        UserRepresentation user = new UserRepresentation();
-        user.setUsername(registrationRequest.username());
-        user.setEmail(registrationRequest.email());
-        user.setEnabled(true);
-        user.setFirstName(registrationRequest.firstName());
-        user.setLastName(registrationRequest.lastName());
-        CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
-        credentialRepresentation.setType("Password");
-        credentialRepresentation.setValue(registrationRequest.password());
-        user.setCredentials(Arrays.asList(credentialRepresentation));
+        UserRepresentation user = getUserRepresentation(registrationRequest);
         var response = realmResource.users().create(user);
         String userId = getUserId(response);
         if (Objects.nonNull(userId)) {
@@ -94,6 +85,20 @@ public class AuthServiceImpl implements IAuthService {
                 .build();
         userRepository.save(myDBUser);
         return BaseResponse.builder().message("Registration is successful. ").build();
+    }
+
+    private static UserRepresentation getUserRepresentation(RegistrationRequest registrationRequest) {
+        UserRepresentation user = new UserRepresentation();
+        user.setUsername(registrationRequest.username());
+        user.setEmail(registrationRequest.email());
+        user.setEnabled(true);
+        user.setFirstName(registrationRequest.firstName());
+        user.setLastName(registrationRequest.lastName());
+        CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
+        credentialRepresentation.setType("Password");
+        credentialRepresentation.setValue(registrationRequest.password());
+        user.setCredentials(Arrays.asList(credentialRepresentation));
+        return user;
     }
 
     private String getUserId(Response response) {
@@ -145,6 +150,7 @@ public class AuthServiceImpl implements IAuthService {
                 .token(confirmCode)
                 .generativeDate(new Date()).isNonExpired(true).user(user)
                 .build();
+        confirmTokenRepository.save(confirmToken);
         try {
             emailService.sendMailToForgotPassword(userRepresentation.getUsername(), userRepresentation.getEmail(), confirmCode);
         }catch (Exception ex){
