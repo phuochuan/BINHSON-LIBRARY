@@ -28,7 +28,7 @@ public class KeycloakConf {
                 .realm(realm)
                 .clientId(clientId)
                 .clientSecret(clientSecret)
-                .username("phuochuan_admin")
+                .username("phuochuan")
                 .password("phuochuan")
                 .build();
     }

@@ -78,12 +78,14 @@ public class AuthServiceImpl implements IAuthService {
         if (Objects.nonNull(userId)) {
             RoleRepresentation roleRepresentation = realmResource.roles().get("ROLE_USER").toRepresentation();
             realmResource.users().get(userId).roles().realmLevel().add(Arrays.asList(roleRepresentation));
+            User myDBUser= User.builder()
+                    .id(userId)
+                    .isNonClocked(true)
+                    .build();
+            userRepository.save(myDBUser);
+        }else{
+            log.error("USER ID : NULL");
         }
-        User myDBUser= User.builder()
-                .id(userId)
-                .isNonClocked(true)
-                .build();
-        userRepository.save(myDBUser);
         return BaseResponse.builder().message("Registration is successful. ").build();
     }
 

@@ -23,5 +23,6 @@ public class User {
     private String address;
     private Boolean isNonClocked;
     private String phone;
+    private String slogan;
 
 }
