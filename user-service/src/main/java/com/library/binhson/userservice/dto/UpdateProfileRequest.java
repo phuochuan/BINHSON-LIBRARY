@@ -1,9 +1,13 @@
 package com.library.binhson.userservice.dto;
 
-public record UpdateProfileRequest( String phone,
-         String username,
-         String fistName,
-         String lastName,
-         String address) {
+import java.util.Date;
+
+public record UpdateProfileRequest(String phone,
+                                   String fistName,
+                                   String lastName,
+                                   String address,
+                                   Date dateOfBirth,
+                                   String biography
+                                   ) {
 
 }

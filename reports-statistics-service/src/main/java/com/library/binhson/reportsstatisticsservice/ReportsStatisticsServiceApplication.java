@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class ReportsStatisticsServiceApplication {
-
+	//MongoDB
 	public static void main(String[] args) {
 		SpringApplication.run(ReportsStatisticsServiceApplication.class, args);
 	}

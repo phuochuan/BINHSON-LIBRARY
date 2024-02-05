@@ -1,14 +1,13 @@
 package com.library.binhson.userservice.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Blob;
+import java.util.Date;
 
 @Entity
 @Table(name = "tbUser")
@@ -19,10 +18,19 @@ import java.sql.Blob;
 public class User {
     @Id
     private String id;
-    private Blob avatar;
+    @Lob
+    @Column(name = "avatar", columnDefinition="LONGBLOB")
+    private byte[] avatar;
     private String address;
-    private Boolean isNonClocked;
+    private Boolean isNonLocked;
     private String phone;
-    private String slogan;
+    private String email;
+    private String lastname;
+    private String firstname;
+    private String biography;
+    private Date dateOfBirth;
+    private Date dateOfAccountSignUp;
+    private String password;
+
 
 }

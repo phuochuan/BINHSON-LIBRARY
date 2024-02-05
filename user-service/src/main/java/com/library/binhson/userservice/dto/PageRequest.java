@@ -1,4 +1,7 @@
 package com.library.binhson.userservice.dto;
 
-public record PageRequest (int pageNumber,int size){
+import lombok.Builder;
+
+@Builder
+public record PageRequest (int page,int size){
 }

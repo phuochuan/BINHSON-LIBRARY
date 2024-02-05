@@ -7,8 +7,11 @@ import com.library.binhson.userservice.repository.ConfirmTokenRepository;
 import com.library.binhson.userservice.repository.UserRepository;
 import com.library.binhson.userservice.service.IAuthService;
 import com.library.binhson.userservice.service.IEmailService;
+import com.library.binhson.userservice.service.third_party_system.KeycloakService;
+import com.library.binhson.userservice.ultils.ValidAuthUtil;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.ServerErrorException;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,11 +28,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.server.ServerErrorException;
 
 import java.util.*;
 
@@ -42,6 +45,8 @@ public class AuthServiceImpl implements IAuthService {
     private final IEmailService emailService;
     private final UserRepository userRepository;
     private final ConfirmTokenRepository confirmTokenRepository;
+    private final KeycloakService keycloakService;
+    private final PasswordEncoder passwordEncoder;
     @Value("${keycloak.auth-server-url}")
     private String keycloakUrl;
     @Value("${keycloak.client_id}")
@@ -72,45 +77,41 @@ public class AuthServiceImpl implements IAuthService {
 
     @Override
     public BaseResponse signUp(RegistrationRequest registrationRequest) {
-        UserRepresentation user = getUserRepresentation(registrationRequest);
-        var response = realmResource.users().create(user);
-        String userId = getUserId(response);
+        log.info("1");
+        if (!ValidAuthUtil.validRegistrationRequest(registrationRequest))
+            throw new BadRequestException();
+        if (userRepository.existsByEmail(registrationRequest.email().trim()))
+            throw new BadRequestException("Email existed on a other account.");
+        log.info("2");
+        String userId = null;
+        try {
+            userId = keycloakService.registerUser(registrationRequest, false);
+            log.info("3");
+        } catch (Exception ex) {
+            log.info("ex");
+            ex.printStackTrace();
+            throw new ServerErrorException(500);
+        }
         if (Objects.nonNull(userId)) {
-            RoleRepresentation roleRepresentation = realmResource.roles().get("ROLE_USER").toRepresentation();
-            realmResource.users().get(userId).roles().realmLevel().add(Arrays.asList(roleRepresentation));
-            User myDBUser= User.builder()
+            log.info("4");
+            User myDBUser = User.builder()
                     .id(userId)
-                    .isNonClocked(true)
+                    .dateOfAccountSignUp(new Date())
+                    .isNonLocked(true)
+                    .lastname(registrationRequest.lastName())
+                    .firstname(registrationRequest.firstName())
+                    .email(registrationRequest.email())
+                    .dateOfBirth(registrationRequest.dateOfBirth())
+                    .password(passwordEncoder.encode(registrationRequest.password()))
                     .build();
+            log.info("4");
             userRepository.save(myDBUser);
-        }else{
-            log.error("USER ID : NULL");
+            log.info("5");
+            keycloakService.setRole(userId, "ROLE_USER");
+            log.info("6");
         }
         return BaseResponse.builder().message("Registration is successful. ").build();
-    }
 
-    private static UserRepresentation getUserRepresentation(RegistrationRequest registrationRequest) {
-        UserRepresentation user = new UserRepresentation();
-        user.setUsername(registrationRequest.username());
-        user.setEmail(registrationRequest.email());
-        user.setEnabled(true);
-        user.setFirstName(registrationRequest.firstName());
-        user.setLastName(registrationRequest.lastName());
-        CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
-        credentialRepresentation.setType("Password");
-        credentialRepresentation.setValue(registrationRequest.password());
-        user.setCredentials(Arrays.asList(credentialRepresentation));
-        return user;
-    }
-
-    private String getUserId(Response response) {
-
-        if (response.getStatusInfo().getFamily() == Response.Status.Family.SUCCESSFUL) {
-            String userUrl = response.getLocation().toString();
-            String userId = userUrl.substring(userUrl.lastIndexOf("/") + 1);
-            return userId;
-        }
-        return null;
     }
 
 
@@ -155,7 +156,7 @@ public class AuthServiceImpl implements IAuthService {
         confirmTokenRepository.save(confirmToken);
         try {
             emailService.sendMailToForgotPassword(userRepresentation.getUsername(), userRepresentation.getEmail(), confirmCode);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
 
@@ -165,7 +166,6 @@ public class AuthServiceImpl implements IAuthService {
         return Objects.isNull(resetPasswordRequest.newPassword())
                 || Objects.isNull(resetPasswordRequest.oldPassword());
     }
-
 
 
 }
