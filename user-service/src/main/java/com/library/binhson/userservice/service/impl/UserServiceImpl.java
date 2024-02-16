@@ -26,9 +26,8 @@ public class UserServiceImpl implements IUserService {
     private final ModelMapper modelMapper;
     private final KeycloakService keycloakService;
     @Override
-    @Cacheable(value = "all_users")
     public List<UserDto> getAll() {
-        List<User> users = userRepository.findAll();
+        List<User> users = get();
         log.info(users.size() + "");
         log.info(users.get(0).getId());
         return users.stream().map(user -> {
@@ -38,14 +37,18 @@ public class UserServiceImpl implements IUserService {
                 })
                 .collect(Collectors.toList());
     }
+    @Cacheable(value = "all_users")
+    private List<User> get() {
+        return userRepository.findAll();
+    }
 
     @Override
-    public UserDto createUser(RegistrationRequest registrationRequest) {
+    public UserDto createUser(AccountRC registrationRequest) {
         if(!ValidAuthUtil.validRegistrationRequestForUsers(registrationRequest))
             throw new BadRequestException();
         if(userRepository.existsByEmail(registrationRequest.email()))
             throw new BadRequestException("Email was applied to another account before.");
-        String userId= keycloakService.registerUser(registrationRequest,true);
+        String userId= keycloakService.registerUser(modelMapper.map(registrationRequest, RegistrationRequest.class),true);
         User myDBUser= User.builder()
                 .id(userId)
                 .dateOfAccountSignUp(new Date())
@@ -55,7 +58,7 @@ public class UserServiceImpl implements IUserService {
                 .email(registrationRequest.email())
                 .build();
         var saveUser=userRepository.save(myDBUser);
-        keycloakService.setRole(userId, "ROLE_USER");
+        keycloakService.setRole(userId, "ROLE_" + registrationRequest.role().getRoleName());
         var finalUser=modelMapper.map(saveUser, UserDto.class);
         finalUser.setIdentityLibraryCode(saveUser.getId());
         return finalUser;
@@ -87,5 +90,20 @@ public class UserServiceImpl implements IUserService {
         var finalUser=modelMapper.map(user, UserDto.class);
         finalUser.setIdentityLibraryCode(userId);
         return finalUser;
+    }
+
+    @Override
+    public List<UserDto> getDetailsAll() {
+        List<User> users = get();
+        return users.stream().map(user -> {
+                    UserDto finalUser = modelMapper.map(user, UserDto.class);
+                    finalUser.setIdentityLibraryCode(user.getId());
+                    finalUser.setNoDotCitizenIdentityCardId(user.getCitizenIdentityCard().getNoDot());
+                    finalUser.setPlaceOfOrigin(user.getCitizenIdentityCard().getPlaceOfOrigin());
+                    finalUser.setPlaceOfResidence(user.getCitizenIdentityCard().getPlaceOfResidence());
+                    finalUser.setPersonalIdentification(user.getCitizenIdentityCard().getPersonalIdentification());
+                    return finalUser;
+                })
+                .collect(Collectors.toList());
     }
 }

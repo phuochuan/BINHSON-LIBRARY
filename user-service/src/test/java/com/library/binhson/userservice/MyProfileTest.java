@@ -1,13 +1,8 @@
 package com.library.binhson.userservice;
 
-import com.library.binhson.userservice.dto.PageRequest;
 import com.library.binhson.userservice.repository.UserRepository;
-import com.library.binhson.userservice.rest.MyProfileController;
-import com.library.binhson.userservice.rest.UserController;
 import com.library.binhson.userservice.service.IMyProfileService;
-import com.library.binhson.userservice.service.IUserService;
 import com.library.binhson.userservice.service.impl.MyProfileServiceImpl;
-import com.library.binhson.userservice.service.impl.UserServiceImpl;
 import com.library.binhson.userservice.service.third_party_system.KeycloakService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -21,7 +16,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @Slf4j
 @WebMvcTest({ UserRepository.class, MyProfileController.class, IMyProfileService.class, MyProfileServiceImpl.class,  ModelMapper.class, KeycloakService.class})

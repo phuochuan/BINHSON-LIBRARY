@@ -25,5 +25,10 @@ public class UserDto implements Serializable {
     private String biography;
     private Date dateOfBirth;
     private Date dateOfAccountSignUp;
+    private String NoDotCitizenIdentityCardId;
+    private String placeOfOrigin;
+    private String placeOfResidence;
+    private String personalIdentification;
+
 
 }

@@ -31,6 +31,9 @@ public class User {
     private Date dateOfBirth;
     private Date dateOfAccountSignUp;
     private String password;
+    @OneToOne
+    @JoinColumn(name = "citizen_identity_id",referencedColumnName = "noDot")
+    private CitizenIdentityCard citizenIdentityCard;
 
 
 }

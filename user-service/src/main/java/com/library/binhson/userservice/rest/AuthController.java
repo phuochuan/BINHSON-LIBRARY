@@ -2,6 +2,7 @@ package com.library.binhson.userservice.rest;
 
 import com.library.binhson.userservice.dto.*;
 import com.library.binhson.userservice.service.IAuthService;
+import jakarta.ws.rs.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
+
+import java.util.Objects;
 
 @RestController
 @RequiredArgsConstructor
@@ -57,11 +60,12 @@ public class AuthController {
         return ResponseEntity.ok().body(BaseResponse.builder().message("Reset password: Successfully").build());
     }
 
-
-    @PostMapping("/identity")
-    @PreAuthorize("hasRole('USER')")
-    ResponseEntity<?> authenticateIdentity() {
-        return null;
+    @PostMapping("refresh-token")
+    ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest){
+        if(Objects.isNull(refreshTokenRequest.refreshToken()))
+            throw new BadRequestException("RefreshToken mustn't null. ");
+        var authResponse=authService.refreshToken(refreshTokenRequest.refreshToken());
+        return ResponseEntity.ok(authResponse);
     }
 
 }

@@ -37,7 +37,8 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Slf4j
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private  final  Converter<Jwt, Collection<GrantedAuthority>> authoritiesConverter;
+    private final Converter<Jwt, Collection<GrantedAuthority>> authoritiesConverter;
+
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http, ServerProperties serverProperties) throws Exception {
 
@@ -64,18 +65,20 @@ public class SecurityConfig {
 
         // @formatter:off
         http.authorizeHttpRequests(requests -> requests
-                .anyRequest().permitAll())
-                .oauth2ResourceServer(oauth2 -> oauth2
-                .jwt(jwt -> jwt
-                        .jwtAuthenticationConverter(myConverter())
-                )
+                        .requestMatchers("/api/v1/user-service/accounts", "/api/v1/user-service/accounts/**")
+                        .hasRole("ADMIN")
+                        .anyRequest().permitAll())
+                        .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt
+                                .jwtAuthenticationConverter(myConverter())
+                        )
         );;
         // @formatter:on
 
         return http.build();
     }
 
-    private Converter<Jwt,? extends AbstractAuthenticationToken> myConverter() {
+    private Converter<Jwt, ? extends AbstractAuthenticationToken> myConverter() {
         final var jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
         jwtAuthenticationConverter.setPrincipalClaimName(StandardClaimNames.PREFERRED_USERNAME);

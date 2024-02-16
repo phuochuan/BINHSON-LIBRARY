@@ -7,9 +7,11 @@ import java.util.List;
 public interface IUserService {
     List<UserDto> getAll();
 
-    UserDto createUser(RegistrationRequest registrationRequest);
+    UserDto createUser(AccountRC accountRC);
 
     void disableUser(String id);
 
     UserDto update(String userId, UpdateProfileRequest updateProfile);
+
+    List<UserDto> getDetailsAll();
 }

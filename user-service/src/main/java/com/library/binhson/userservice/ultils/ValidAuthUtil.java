@@ -1,5 +1,6 @@
 package com.library.binhson.userservice.ultils;
 
+import com.library.binhson.userservice.dto.AccountRC;
 import com.library.binhson.userservice.dto.RegistrationRequest;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ public class ValidAuthUtil {
                 && Objects.nonNull(registrationRequest.username())
                 && Objects.nonNull(registrationRequest.password());
     }
-    public static Boolean validRegistrationRequestForUsers(RegistrationRequest registrationRequest){
+    public static Boolean validRegistrationRequestForUsers(AccountRC registrationRequest){
         return Objects.nonNull(registrationRequest.email())
                 && Objects.nonNull(registrationRequest.username());
     }

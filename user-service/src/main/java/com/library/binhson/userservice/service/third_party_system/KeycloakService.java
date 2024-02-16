@@ -1,11 +1,13 @@
 package com.library.binhson.userservice.service.third_party_system;
 
+import com.library.binhson.userservice.dto.AuthResponse;
 import com.library.binhson.userservice.dto.ChangeEmail;
 import com.library.binhson.userservice.dto.RegistrationRequest;
 import com.library.binhson.userservice.repository.UserRepository;
 import jakarta.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
@@ -21,6 +23,7 @@ import java.util.Objects;
 @Slf4j
 public class KeycloakService {
     private final RealmResource realmResource;
+    private final Keycloak keycloak;
 
 
     public String registerUser(RegistrationRequest registrationRequest,boolean isResetPassword) {
@@ -86,5 +89,9 @@ public class KeycloakService {
     public String getPassword(String id) {
         var credentials=realmResource.users().get(id).credentials();
         return credentials.get(0).getValue();
+    }
+
+    public AuthResponse refreshToken(String refreshToken) {
+        return null;
     }
 }

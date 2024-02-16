@@ -12,14 +12,11 @@ import com.library.binhson.userservice.ultils.ValidAuthUtil;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.ServerErrorException;
-import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.keycloak.Config;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
-import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -55,7 +52,7 @@ public class AuthServiceImpl implements IAuthService {
     private String granType;
 
     @Override
-    public LoginResponse login(LoginRequest loginRequest) {
+    public AuthResponse login(LoginRequest loginRequest) {
         RestTemplate restTemplate = new RestTemplate();
         String authUrl = keycloakUrl + "token";
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
@@ -68,7 +65,7 @@ public class AuthServiceImpl implements IAuthService {
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
         ResponseEntity<Map> response = restTemplate.postForEntity(authUrl, request, Map.class);
         Map<String, String> responseMap = response.getBody();
-        return LoginResponse.builder()
+        return AuthResponse.builder()
                 .accessToken(responseMap.get("access_token"))
                 .refreshToken(responseMap.get("refresh_token"))
                 .build();
@@ -160,6 +157,11 @@ public class AuthServiceImpl implements IAuthService {
             ex.printStackTrace();
         }
 
+    }
+
+    @Override
+    public AuthResponse refreshToken(String refreshToken) {
+        return keycloakService.refreshToken(refreshToken);
     }
 
     private boolean validResetPasswordRequest(ResetPasswordRequest resetPasswordRequest) {
