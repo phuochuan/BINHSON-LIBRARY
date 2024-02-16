@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @Slf4j
-@WebMvcTest({ UserRepository.class, MyProfileController.class, IMyProfileService.class, MyProfileServiceImpl.class,  ModelMapper.class, KeycloakService.class})
+@WebMvcTest({ UserRepository.class,  IMyProfileService.class, MyProfileServiceImpl.class,  ModelMapper.class, KeycloakService.class})
 @ExtendWith({SpringExtension.class})
 public class MyProfileTest {
     @Autowired
