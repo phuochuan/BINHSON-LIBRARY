@@ -65,8 +65,8 @@ public class SecurityConfig {
 
         // @formatter:off
         http.authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/api/v1/user-service/accounts", "/api/v1/user-service/accounts/**")
-                        .hasRole("ADMIN")
+                        .requestMatchers("/api/v1/user-service/accounts", "/api/v1/user-service/accounts/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/user-service/members", "/api/v1/user-service/members/**").hasAnyRole("ADMIN", "LIBRARIAN")
                         .anyRequest().permitAll())
                         .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt

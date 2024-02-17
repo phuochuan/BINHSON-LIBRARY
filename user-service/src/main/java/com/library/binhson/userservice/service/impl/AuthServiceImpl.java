@@ -2,6 +2,7 @@ package com.library.binhson.userservice.service.impl;
 
 import com.library.binhson.userservice.dto.*;
 import com.library.binhson.userservice.entity.ConfirmToken;
+import com.library.binhson.userservice.entity.Role;
 import com.library.binhson.userservice.entity.User;
 import com.library.binhson.userservice.repository.ConfirmTokenRepository;
 import com.library.binhson.userservice.repository.UserRepository;
@@ -74,23 +75,18 @@ public class AuthServiceImpl implements IAuthService {
 
     @Override
     public BaseResponse signUp(RegistrationRequest registrationRequest) {
-        log.info("1");
         if (!ValidAuthUtil.validRegistrationRequest(registrationRequest))
             throw new BadRequestException();
         if (userRepository.existsByEmail(registrationRequest.email().trim()))
             throw new BadRequestException("Email existed on a other account.");
-        log.info("2");
         String userId = null;
         try {
             userId = keycloakService.registerUser(registrationRequest, false);
-            log.info("3");
         } catch (Exception ex) {
-            log.info("ex");
             ex.printStackTrace();
             throw new ServerErrorException(500);
         }
         if (Objects.nonNull(userId)) {
-            log.info("4");
             User myDBUser = User.builder()
                     .id(userId)
                     .dateOfAccountSignUp(new Date())
@@ -101,11 +97,8 @@ public class AuthServiceImpl implements IAuthService {
                     .dateOfBirth(registrationRequest.dateOfBirth())
                     .password(passwordEncoder.encode(registrationRequest.password()))
                     .build();
-            log.info("4");
             userRepository.save(myDBUser);
-            log.info("5");
-            keycloakService.setRole(userId, "ROLE_USER");
-            log.info("6");
+            keycloakService.setRole(userId, "ROLE_"+ Role.MEMBER);
         }
         return BaseResponse.builder().message("Registration is successful. ").build();
 

@@ -1,9 +1,6 @@
 package com.library.binhson.userservice.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +19,9 @@ public class CitizenIdentityCard {
     private String placeOfOrigin;
     private String placeOfResidence;
     private String personalIdentification;
+    @Lob
+    @Column(name = "faceId", columnDefinition="LONGBLOB")
+    private byte[] faceId;
     @OneToOne(mappedBy ="citizenIdentityCard")
     private User user;
 

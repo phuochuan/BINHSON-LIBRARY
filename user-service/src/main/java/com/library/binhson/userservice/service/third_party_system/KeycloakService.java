@@ -3,27 +3,47 @@ package com.library.binhson.userservice.service.third_party_system;
 import com.library.binhson.userservice.dto.AuthResponse;
 import com.library.binhson.userservice.dto.ChangeEmail;
 import com.library.binhson.userservice.dto.RegistrationRequest;
-import com.library.binhson.userservice.repository.UserRepository;
+import jakarta.ws.rs.ServerErrorException;
+import jakarta.ws.rs.core.MultivaluedMap;
 import jakarta.ws.rs.core.Response;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jboss.resteasy.specimpl.MultivaluedMapImpl;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Objects;
 
 @Service
-@AllArgsConstructor
 @Slf4j
 public class KeycloakService {
-    private final RealmResource realmResource;
-    private final Keycloak keycloak;
+    protected final RealmResource realmResource;
+    protected final Keycloak keycloak;
+    @Value("${keycloak.auth-server-url}")
+    private String keycloakServerUrl;
+    @Value("${keycloak.client_id}")
+    private String clientId;
+
+    public KeycloakService(RealmResource realmResource, Keycloak keycloak) {
+        this.realmResource = realmResource;
+        this.keycloak = keycloak;
+    }
 
 
     public String registerUser(RegistrationRequest registrationRequest,boolean isResetPassword) {
@@ -92,6 +112,27 @@ public class KeycloakService {
     }
 
     public AuthResponse refreshToken(String refreshToken) {
-        return null;
+        var refreshTokenUrl=keycloakServerUrl+"token";
+        RestTemplate restTemplate= new RestTemplate();
+        MultiValueMap<String, String> bodyValue= new LinkedMultiValueMap<>();
+        bodyValue.add("client_id", clientId);
+        bodyValue.add("grant_type", "refresh_token");
+        bodyValue.add("refresh_token", refreshToken);
+        bodyValue.add("client_secret","");
+
+        restTemplate.getMessageConverters().add(new FormHttpMessageConverter());
+        HttpHeaders headers=new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        HttpEntity<MultiValueMap<String,String>> mapHttpEntity=new HttpEntity<>(bodyValue, headers);
+        ResponseEntity<HashMap> response=restTemplate.postForEntity(refreshTokenUrl,mapHttpEntity, HashMap.class);
+        if(response.getStatusCode().is2xxSuccessful() || response.getStatusCode().value()==200){
+            log.info(""+ response.getBody().toString());
+            var authResponse=AuthResponse.builder()
+                    .accessToken((String) response.getBody().get("access_token"))
+                    .refreshToken((String) response.getBody().get("refresh_token")).build();
+            return authResponse;
+        }else
+            throw new RuntimeException("Server Error");
     }
 }

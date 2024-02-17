@@ -65,18 +65,18 @@ public class MyProfileServiceImpl implements IMyProfileService {
     public UserDto update(UpdateProfileRequest updateProfile) {
         var keycloakUser = getCurrentKeycloakUser();
         var user = userRepository.findById(keycloakUser.getId()).orElseThrow();
-        if (Objects.nonNull(updateProfile.lastName()) && Objects.nonNull(updateProfile.fistName())) {
-            user.setLastname(updateProfile.lastName());
-            user.setFirstname(updateProfile.fistName());
+        if (Objects.nonNull(updateProfile.lastName) && Objects.nonNull(updateProfile.fistName)) {
+            user.setLastname(updateProfile.lastName);
+            user.setFirstname(updateProfile.fistName);
         }
-        if (Objects.nonNull(updateProfile.dateOfBirth()))
-            user.setDateOfBirth(updateProfile.dateOfBirth());
-        if (Objects.nonNull(updateProfile.biography()))
-            user.setBiography(updateProfile.biography());
-        if (Objects.nonNull(updateProfile.address()))
-            user.setAddress(updateProfile.address());
-        if (Objects.nonNull(updateProfile.phone()) && ValidationUtil.isValidPhone(updateProfile.phone()))
-            user.setPhone(updateProfile.phone());
+        if (Objects.nonNull(updateProfile.dateOfBirth))
+            user.setDateOfBirth(updateProfile.dateOfBirth);
+        if (Objects.nonNull(updateProfile.biography))
+            user.setBiography(updateProfile.biography);
+        if (Objects.nonNull(updateProfile.address))
+            user.setAddress(updateProfile.address);
+        if (Objects.nonNull(updateProfile.phone) && ValidationUtil.isValidPhone(updateProfile.phone))
+            user.setPhone(updateProfile.phone);
         user = userRepository.save(user);
         var resultUser = modelMapper.map(user, UserDto.class);
         resultUser.setUsername(keycloakUser.getUsername());

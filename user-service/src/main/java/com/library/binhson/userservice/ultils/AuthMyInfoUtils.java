@@ -10,4 +10,5 @@ public class AuthMyInfoUtils {
         String username=authentication.getName().toString();
         return username;
     }
+
 }

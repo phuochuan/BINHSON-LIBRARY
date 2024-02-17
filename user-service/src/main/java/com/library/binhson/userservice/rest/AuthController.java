@@ -62,9 +62,9 @@ public class AuthController {
 
     @PostMapping("refresh-token")
     ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest){
-        if(Objects.isNull(refreshTokenRequest.refreshToken()))
+        if(Objects.isNull(refreshTokenRequest.refresh_token()))
             throw new BadRequestException("RefreshToken mustn't null. ");
-        var authResponse=authService.refreshToken(refreshTokenRequest.refreshToken());
+        var authResponse=authService.refreshToken(refreshTokenRequest.refresh_token());
         return ResponseEntity.ok(authResponse);
     }
 

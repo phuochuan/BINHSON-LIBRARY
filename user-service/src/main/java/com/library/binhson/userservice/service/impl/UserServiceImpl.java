@@ -58,7 +58,7 @@ public class UserServiceImpl implements IUserService {
                 .email(registrationRequest.email())
                 .build();
         var saveUser=userRepository.save(myDBUser);
-        keycloakService.setRole(userId, "ROLE_" + registrationRequest.role().getRoleName());
+        keycloakService.setRole(userId, "ROLE_" + registrationRequest.role().name());
         var finalUser=modelMapper.map(saveUser, UserDto.class);
         finalUser.setIdentityLibraryCode(saveUser.getId());
         return finalUser;
@@ -75,17 +75,20 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserDto update(String userId, UpdateProfileRequest updateProfile) {
         var user=userRepository.findById(userId).orElseThrow(()->new BadRequestException("No user have Id that is: "+userId));
-        if(Objects.nonNull(updateProfile.address()))
-            user.setAddress(updateProfile.address());
-        if (Objects.nonNull(updateProfile.biography()))
-            user.setBiography(updateProfile.biography());
-        if(Objects.nonNull(updateProfile.dateOfBirth()))
-            user.setDateOfBirth(updateProfile.dateOfBirth());
-        if(Objects.nonNull(updateProfile.fistName()) && Objects.isNull(updateProfile.lastName()))
+        if(Objects.nonNull(updateProfile.address))
+            user.setAddress(updateProfile.address);
+        if (Objects.nonNull(updateProfile.biography))
+            user.setBiography(updateProfile.biography);
+        if(Objects.nonNull(updateProfile.dateOfBirth))
+            user.setDateOfBirth(updateProfile.dateOfBirth);
+        if(Objects.nonNull(updateProfile.fistName) && Objects.nonNull(updateProfile.lastName))
         {
-            user.setFirstname(updateProfile.fistName());
-            user.setLastname(updateProfile.lastName());
+            log.info("user name");
+            user.setFirstname(updateProfile.fistName);
+            user.setLastname(updateProfile.lastName);
         }
+        log.info("user name" + updateProfile.fistName+updateProfile.lastName );
+
         user=userRepository.save(user);
         var finalUser=modelMapper.map(user, UserDto.class);
         finalUser.setIdentityLibraryCode(userId);

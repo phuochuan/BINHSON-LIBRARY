@@ -1,13 +1,21 @@
 package com.library.binhson.userservice.dto;
 
-import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public record UpdateProfileRequest(String phone,
-                                   String fistName,
-                                   String lastName,
-                                   String address,
-                                   Date dateOfBirth,
-                                   String biography
-                                   ) {
+import java.util.Date;
+@AllArgsConstructor
+@Data
+@NoArgsConstructor
+@Builder
+public class UpdateProfileRequest{
+    public String phone;
+    public String fistName;
+    public String lastName;
+    public String address;
+    public Date dateOfBirth;
+    public String biography;
 
 }

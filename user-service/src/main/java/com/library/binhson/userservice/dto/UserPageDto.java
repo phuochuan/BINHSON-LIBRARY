@@ -18,14 +18,15 @@ public class UserPageDto {
     private int page=0;
 
     public UserPageDto(List<UserDto> users, int size, int page) {
-        if(Objects.isNull(users)) {
+        if(Objects.isNull(users) || users.isEmpty()) {
             log.info("User list is null.");
+            totalPage=0;
             return;
         }
         this.users = users;
         this.size = size;
         this.page = page;
-        if(users.size()%size==0)
+        if((users.size()%size)==0)
             this.totalPage = (users.size()/size);
         else  this.totalPage = (users.size()/size)+1;
 

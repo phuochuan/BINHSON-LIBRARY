@@ -1,6 +1,7 @@
 package com.library.binhson.userservice.dto;
 
-import javax.management.relation.Role;
+import com.library.binhson.userservice.entity.Role;
+
 import java.util.Date;
 
 public record AccountRC (String username,
@@ -8,6 +9,6 @@ public record AccountRC (String username,
                          String password,
                          String firstName ,
                          String lastName,
-                         Date dateOfBirth,
+                         Date date_of_birth,
                          Role role){
 }

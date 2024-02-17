@@ -11,7 +11,7 @@ public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception e){
         e.printStackTrace();
-        return ResponseEntity.status(e.getCause().hashCode()).body(e.getMessage());
+        return ResponseEntity.status(500).body(e.getMessage());
     }
     @org.springframework.web.bind.annotation.ExceptionHandler(BadRequestException.class)
     public ResponseEntity<?> handleBadRequestException(Exception e){
