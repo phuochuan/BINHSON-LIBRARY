@@ -21,6 +21,7 @@ public class User {
     @Lob
     @Column(name = "avatar", columnDefinition="LONGBLOB")
     private byte[] avatar;
+    private String username;
     private String address;
     private Boolean isNonLocked;
     private String phone;

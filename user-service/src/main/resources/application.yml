@@ -49,4 +49,8 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+  github:
+    secret: f16d2864d1d5be8a209f61ec003b737c1c8fe535
+    id: 061edadb00d17f55be6c
+    redirect-url: http://localhost:9999/login/return_code
 

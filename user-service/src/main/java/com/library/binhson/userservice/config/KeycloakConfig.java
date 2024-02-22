@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class KeycloakConf {
+public class KeycloakConfig {
     @Value("${keycloak.server_url}")
     private String serverUrl;
 

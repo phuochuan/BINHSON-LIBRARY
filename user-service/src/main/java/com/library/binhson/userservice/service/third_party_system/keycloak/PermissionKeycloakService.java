@@ -1,4 +1,4 @@
-package com.library.binhson.userservice.service.third_party_system;
+package com.library.binhson.userservice.service.third_party_system.keycloak;
 
 import com.library.binhson.userservice.entity.Permission;
 import org.keycloak.admin.client.Keycloak;

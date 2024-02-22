@@ -160,6 +160,13 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!--		KAFKA     -->
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+		</dependency>
+		<!--		          -->
+
 
 	</dependencies>
 	<dependencyManagement>

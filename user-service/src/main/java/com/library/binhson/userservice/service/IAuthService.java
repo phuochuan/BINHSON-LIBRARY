@@ -12,4 +12,6 @@ public interface IAuthService {
     void forgotPassword(ForgotPasswordRequest forgotPasswordRequest);
 
     AuthResponse refreshToken(String s);
+
+    AuthResponse getAccessToken(String authorizationCode);
 }

@@ -3,7 +3,7 @@ package com.library.binhson.userservice;
 import com.library.binhson.userservice.repository.UserRepository;
 import com.library.binhson.userservice.service.IMyProfileService;
 import com.library.binhson.userservice.service.impl.MyProfileServiceImpl;
-import com.library.binhson.userservice.service.third_party_system.KeycloakService;
+import com.library.binhson.userservice.service.third_party_system.keycloak.KeycloakService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

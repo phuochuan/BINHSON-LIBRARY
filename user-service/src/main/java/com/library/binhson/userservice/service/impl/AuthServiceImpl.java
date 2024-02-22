@@ -1,6 +1,7 @@
 package com.library.binhson.userservice.service.impl;
 
 import com.library.binhson.userservice.dto.*;
+import com.library.binhson.userservice.dto.kafka.Member;
 import com.library.binhson.userservice.entity.ConfirmToken;
 import com.library.binhson.userservice.entity.Role;
 import com.library.binhson.userservice.entity.User;
@@ -8,7 +9,9 @@ import com.library.binhson.userservice.repository.ConfirmTokenRepository;
 import com.library.binhson.userservice.repository.UserRepository;
 import com.library.binhson.userservice.service.IAuthService;
 import com.library.binhson.userservice.service.IEmailService;
-import com.library.binhson.userservice.service.third_party_system.KeycloakService;
+import com.library.binhson.userservice.service.third_party_system.github.GithubService;
+import com.library.binhson.userservice.service.third_party_system.kafka.UserKafkaSendToBrokerService;
+import com.library.binhson.userservice.service.third_party_system.keycloak.KeycloakService;
 import com.library.binhson.userservice.ultils.ValidAuthUtil;
 import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotFoundException;
@@ -19,6 +22,7 @@ import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -37,7 +41,6 @@ import java.util.*;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-
 public class AuthServiceImpl implements IAuthService {
     private final RealmResource realmResource;
     private final IEmailService emailService;
@@ -45,6 +48,9 @@ public class AuthServiceImpl implements IAuthService {
     private final ConfirmTokenRepository confirmTokenRepository;
     private final KeycloakService keycloakService;
     private final PasswordEncoder passwordEncoder;
+    private final GithubService githubService;
+    private final UserKafkaSendToBrokerService kafkaSendToBrokerService;
+    private final ModelMapper modelMapper;
     @Value("${keycloak.auth-server-url}")
     private String keycloakUrl;
     @Value("${keycloak.client_id}")
@@ -89,6 +95,7 @@ public class AuthServiceImpl implements IAuthService {
         if (Objects.nonNull(userId)) {
             User myDBUser = User.builder()
                     .id(userId)
+                    .username(registrationRequest.username())
                     .dateOfAccountSignUp(new Date())
                     .isNonLocked(true)
                     .lastname(registrationRequest.lastName())
@@ -99,6 +106,7 @@ public class AuthServiceImpl implements IAuthService {
                     .build();
             userRepository.save(myDBUser);
             keycloakService.setRole(userId, "ROLE_"+ Role.MEMBER);
+            kafkaSendToBrokerService.sendToTopic("Member", modelMapper.map(myDBUser, Member.class) );
         }
         return BaseResponse.builder().message("Registration is successful. ").build();
 
@@ -156,6 +164,23 @@ public class AuthServiceImpl implements IAuthService {
     public AuthResponse refreshToken(String refreshToken) {
         return keycloakService.refreshToken(refreshToken);
     }
+
+    @Override
+    public AuthResponse getAccessToken(String authorizationCode) {
+        HashMap<String, String> credentials=githubService.getCredentials(authorizationCode);
+        // login=LacHaPhuocHuan
+        //name=Phan Phuoc Huan
+        var githubId=credentials.get("id");
+        var username=credentials.get("login");
+        var fullName=credentials.get("name");
+        String[] wordOnName=fullName.split(" ");
+        String firstName=wordOnName[wordOnName.length-1];
+        String lastName=username.concat(firstName);
+
+        return null;
+    }
+
+
 
     private boolean validResetPasswordRequest(ResetPasswordRequest resetPasswordRequest) {
         return Objects.isNull(resetPasswordRequest.newPassword())

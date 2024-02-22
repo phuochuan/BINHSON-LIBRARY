@@ -7,11 +7,10 @@ import com.library.binhson.userservice.dto.UpdateProfileRequest;
 import com.library.binhson.userservice.entity.Role;
 import com.library.binhson.userservice.service.IMemberService;
 import com.library.binhson.userservice.service.IUserService;
-import com.library.binhson.userservice.service.third_party_system.MembersKeycloakService;
+import com.library.binhson.userservice.service.third_party_system.keycloak.MembersKeycloakService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;

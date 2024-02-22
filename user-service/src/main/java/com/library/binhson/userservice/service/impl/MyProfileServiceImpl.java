@@ -6,13 +6,11 @@ import com.library.binhson.userservice.dto.UserDto;
 import com.library.binhson.userservice.entity.User;
 import com.library.binhson.userservice.repository.UserRepository;
 import com.library.binhson.userservice.service.IMyProfileService;
-import com.library.binhson.userservice.service.third_party_system.KeycloakService;
+import com.library.binhson.userservice.service.third_party_system.keycloak.KeycloakService;
 import com.library.binhson.userservice.ultils.AuthMyInfoUtils;
 import com.library.binhson.userservice.ultils.ValidationUtil;
 import jakarta.ws.rs.BadRequestException;
-import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.ServerErrorException;
-import jakarta.ws.rs.core.Response;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -21,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.sql.rowset.serial.SerialBlob;
 import java.util.Objects;
 
 @Service

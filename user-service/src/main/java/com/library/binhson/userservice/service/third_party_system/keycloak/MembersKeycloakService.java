@@ -1,4 +1,4 @@
-package com.library.binhson.userservice.service.third_party_system;
+package com.library.binhson.userservice.service.third_party_system.keycloak;
 
 import com.library.binhson.userservice.entity.Role;
 import lombok.extern.slf4j.Slf4j;

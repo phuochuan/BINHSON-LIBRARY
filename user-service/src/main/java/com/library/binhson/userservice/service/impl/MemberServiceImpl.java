@@ -2,15 +2,13 @@ package com.library.binhson.userservice.service.impl;
 
 import com.library.binhson.userservice.dto.ObjectPage;
 import com.library.binhson.userservice.dto.UserDto;
-import com.library.binhson.userservice.dto.UserPageDto;
 import com.library.binhson.userservice.service.IMemberService;
 import com.library.binhson.userservice.service.IUserService;
-import com.library.binhson.userservice.service.third_party_system.MembersKeycloakService;
+import com.library.binhson.userservice.service.third_party_system.keycloak.MembersKeycloakService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service

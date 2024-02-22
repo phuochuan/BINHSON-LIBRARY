@@ -1,10 +1,14 @@
 package com.library.binhson.userservice.service.impl;
 
 import com.library.binhson.userservice.dto.*;
+import com.library.binhson.userservice.dto.kafka.Librarian;
+import com.library.binhson.userservice.dto.kafka.Member;
+import com.library.binhson.userservice.entity.Role;
 import com.library.binhson.userservice.entity.User;
 import com.library.binhson.userservice.repository.UserRepository;
 import com.library.binhson.userservice.service.IUserService;
-import com.library.binhson.userservice.service.third_party_system.KeycloakService;
+import com.library.binhson.userservice.service.third_party_system.kafka.UserKafkaSendToBrokerService;
+import com.library.binhson.userservice.service.third_party_system.keycloak.KeycloakService;
 import com.library.binhson.userservice.ultils.ValidAuthUtil;
 import jakarta.ws.rs.BadRequestException;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +29,7 @@ public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final KeycloakService keycloakService;
+    private final UserKafkaSendToBrokerService kafkaSendToBrokerService;
     @Override
     public List<UserDto> getAll() {
         List<User> users = get();
@@ -51,6 +56,7 @@ public class UserServiceImpl implements IUserService {
         String userId= keycloakService.registerUser(modelMapper.map(registrationRequest, RegistrationRequest.class),true);
         User myDBUser= User.builder()
                 .id(userId)
+                .username(registrationRequest.username())
                 .dateOfAccountSignUp(new Date())
                 .isNonLocked(true)
                 .lastname(registrationRequest.lastName())
@@ -61,6 +67,13 @@ public class UserServiceImpl implements IUserService {
         keycloakService.setRole(userId, "ROLE_" + registrationRequest.role().name());
         var finalUser=modelMapper.map(saveUser, UserDto.class);
         finalUser.setIdentityLibraryCode(saveUser.getId());
+
+        if(registrationRequest.role().equals(Role.MEMBER))
+            kafkaSendToBrokerService.sendToTopic("Member", modelMapper.map(myDBUser, Member.class) );
+        else if(registrationRequest.role().equals(Role.LIBRARIAN))
+            kafkaSendToBrokerService.sendToTopic("Librarian", modelMapper.map(myDBUser, Librarian.class) );
+
+
         return finalUser;
     }
 
