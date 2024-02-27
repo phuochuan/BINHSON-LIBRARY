@@ -1,9 +1,6 @@
 package com.library.binhson.documentservice.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Lob;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +15,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 
-@Entity(name = "tbEBook")
+@Entity()
+@Table(name = "tbEBook")
 @DiscriminatorValue("ebook")
 public class EBook extends Book{
     private Float size;

@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 
 import javax.naming.Name;
 
-@Entity(name = "tbPerson")
+@Entity()
+@Table(name = "tbPerson")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

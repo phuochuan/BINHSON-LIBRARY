@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-@Entity(name = "tbImportInvoice")
+@Entity()
+@Table(name = "tbImportInvoice")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

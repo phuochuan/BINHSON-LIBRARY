@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
-@Entity(name = "tbBook")
+@Entity()
+@Table(name = "tbBook")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "book_type", discriminatorType = DiscriminatorType.STRING)
 
@@ -32,7 +33,7 @@ public class Book {
     joinColumns = @JoinColumn(name = "book_id"),
     inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories;
-    private Integer lent;
+    private Integer length;
     @Enumerated(EnumType.STRING)
     private QualityPaper quality;
     @ManyToOne

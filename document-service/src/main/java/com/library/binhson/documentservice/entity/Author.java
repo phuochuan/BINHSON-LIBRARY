@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 import java.util.Set;
 
-@Entity(name = "tbAuthor")
+@Entity()
+@Table(name = "tbAuthor")
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor@Builder

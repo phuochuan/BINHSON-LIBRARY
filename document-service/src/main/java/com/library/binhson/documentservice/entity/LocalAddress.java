@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Entity(name = "tbLocalAddress")
+@Entity()
+@Table(name = "tbLocalAddress")
 public class LocalAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

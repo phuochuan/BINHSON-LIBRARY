@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
-@Entity(name = "tbPhysicalBook")
+@Entity()
+@Table(name = "tbPhysicalBook")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
