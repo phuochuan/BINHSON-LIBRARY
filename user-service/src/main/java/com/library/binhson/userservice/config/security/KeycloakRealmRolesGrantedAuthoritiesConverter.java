@@ -1,4 +1,4 @@
-package com.library.binhson.userservice.config;
+package com.library.binhson.userservice.config.security;
 
 import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.converter.Converter;
@@ -20,4 +20,9 @@ class KeycloakRealmRolesGrantedAuthoritiesConverter implements Converter<Jwt, Co
         final var realmRoles = (List<String>) realmAccess.getOrDefault("roles", List.of());
         return realmRoles.stream().map(SimpleGrantedAuthority::new).map(GrantedAuthority.class::cast).toList();
     }
+
+    // phương thức convert để chuyển đổi thông tin từ đối tượng Jwt sang danh sách các GrantedAuthority.
+    // Trong trường hợp này, nó đọc các vai trò (roles) từ claims của Jwt và chuyển đổi chúng thành danh sách
+    // các GrantedAuthority, sử dụng SimpleGrantedAuthority để tạo các đối tượng được phân quyền. Điều này thường
+    // được sử dụng để xác định quyền truy cập của người dùng dựa trên thông tin từ JWT được sinh ra bởi Keycloak
 }

@@ -1,4 +1,4 @@
-package com.library.binhson.userservice.config;
+package com.library.binhson.documentservice.config.security;
 
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
