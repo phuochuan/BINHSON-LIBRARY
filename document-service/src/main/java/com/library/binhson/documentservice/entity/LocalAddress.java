@@ -16,10 +16,10 @@ public class LocalAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer row;
-    private Integer column;
-    private Integer width;
-    private Integer height;
+    private Integer shelfRow;
+    private Integer shelfColumn;
+    private Integer boxWidth;
+    private Integer boxHeight;
     @ManyToOne
     @JoinColumn(name = "shelf_id")
     private Shelf shelf;
