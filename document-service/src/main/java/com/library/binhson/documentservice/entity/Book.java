@@ -35,5 +35,7 @@ public class Book {
     private Integer lent;
     @Enumerated(EnumType.STRING)
     private QualityPaper quality;
+    @ManyToOne
+    @JoinColumn(name ="import_invoice_Id")
     private ImportInvoice stogreInvoince;
 }

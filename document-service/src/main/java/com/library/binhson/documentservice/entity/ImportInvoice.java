@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity(name = "tbImportInvoice")
 @AllArgsConstructor
@@ -21,5 +20,7 @@ public class ImportInvoice {
     private String origin;
     private Date importWarehouseDate;
     private Float cost;
+    @ManyToOne
+    @JoinColumn(name = "librarian_id")
     private Librarian librarian;
 }

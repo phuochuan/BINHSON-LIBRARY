@@ -16,6 +16,7 @@ import javax.naming.Name;
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name =  "person_type", discriminatorType = DiscriminatorType.STRING)
 public class Person {
+    @Id
     private String id;
     private String username;
 }
