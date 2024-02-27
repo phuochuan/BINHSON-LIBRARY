@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/demo")
+@RequestMapping("/api/v1/document-service/demo")
 public class DemoController {
     @GetMapping({"","/"})
     public ResponseEntity<?> demo() {return ResponseEntity.ok("ok");}
