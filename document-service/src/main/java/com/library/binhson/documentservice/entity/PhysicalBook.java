@@ -24,7 +24,7 @@ public class PhysicalBook extends Book{
     //100-0 %.
     private Float depreciation;
 
-    public PhysicalBook(String id, String name, Set<Author> authors, String yearOfPublish, String republishTime, Set<Category> categories, Integer lent, QualityPaper quality, ImportInvoice stogreInvoince, LocalAddress localAddress, Float thickness, Float height, Float weight, Float depreciation) {
+    public PhysicalBook(String id, String name, Set<Author> authors, Integer yearOfPublish, Integer republishTime, Set<Category> categories, Integer lent, QualityPaper quality, ImportInvoice stogreInvoince, LocalAddress localAddress, Float thickness, Float height, Float weight, Float depreciation) {
         super(id, name, authors, yearOfPublish, republishTime, categories, lent, quality, stogreInvoince);
         this.localAddress = localAddress;
         this.thickness = thickness;

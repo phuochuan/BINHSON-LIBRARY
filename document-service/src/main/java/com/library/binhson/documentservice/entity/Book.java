@@ -26,8 +26,8 @@ public class Book {
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id"))
     private Set<Author> authors;
-    private String yearOfPublish;
-    private String republishTime;
+    private Integer yearOfPublish;
+    private Integer republishTime;
     @ManyToMany
     @JoinTable(name = "book_category",
     joinColumns = @JoinColumn(name = "book_id"),

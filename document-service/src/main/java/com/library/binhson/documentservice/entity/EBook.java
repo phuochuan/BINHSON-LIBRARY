@@ -26,7 +26,7 @@ public class EBook extends Book{
     private String fileName;
     private Date generatedDate;
 
-    public EBook(String id, String name, Set<Author> authors, String yearOfPublish, String republishTime, Set<Category> categories, Integer lent, QualityPaper quality, ImportInvoice stogreInvoince, Float size, byte[] ebook, String fileName, Date generatedDate) {
+    public EBook(String id, String name, Set<Author> authors, Integer yearOfPublish, Integer republishTime, Set<Category> categories, Integer lent, QualityPaper quality, ImportInvoice stogreInvoince, Float size, byte[] ebook, String fileName, Date generatedDate) {
         super(id, name, authors, yearOfPublish, republishTime, categories, lent, quality, stogreInvoince);
         this.size = size;
         this.ebook = ebook;
