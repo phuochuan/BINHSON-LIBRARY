@@ -1,4 +1,4 @@
-package com.library.binhson.documentservice.dto.Request;
+package com.library.binhson.documentservice.dto.request;
 
 import java.util.List;
 

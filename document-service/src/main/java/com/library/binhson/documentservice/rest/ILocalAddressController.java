@@ -1,6 +1,6 @@
 package com.library.binhson.documentservice.rest;
 
-import com.library.binhson.documentservice.dto.Request.RequestImportInvoiceDto;
+import com.library.binhson.documentservice.dto.request.RequestImportInvoiceDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;

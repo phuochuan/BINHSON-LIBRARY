@@ -1,7 +1,6 @@
 package com.library.binhson.documentservice.rest;
 
-import com.library.binhson.documentservice.dto.Request.RequestRoomDto;
-import com.library.binhson.documentservice.dto.Request.RequestShelfDto;
+import com.library.binhson.documentservice.dto.request.RequestShelfDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;

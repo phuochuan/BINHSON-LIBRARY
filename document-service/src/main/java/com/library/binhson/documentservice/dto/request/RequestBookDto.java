@@ -1,7 +1,6 @@
-package com.library.binhson.documentservice.dto.Request;
+package com.library.binhson.documentservice.dto.request;
 
 import com.library.binhson.documentservice.entity.*;
-import jakarta.persistence.*;
 
 import java.sql.Date;
 import java.util.Set;

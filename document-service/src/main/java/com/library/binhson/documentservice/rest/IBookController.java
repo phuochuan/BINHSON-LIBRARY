@@ -1,6 +1,6 @@
 package com.library.binhson.documentservice.rest;
 
-import com.library.binhson.documentservice.dto.Request.RequestBookDto;
+import com.library.binhson.documentservice.dto.request.RequestBookDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
@@ -25,13 +25,7 @@ public interface IBookController extends IBaseController{
     ResponseEntity<?> updateEBook(@PathVariable("id") String id);
 
 
-    @GetMapping("/search")
-    ResponseEntity<?> search(@RequestParam(value = "offset", required = false) Integer offset,
-                             @RequestParam(value = "limit", required = false) Integer limit,
-                             @RequestParam(value = "key", required = true) String key,
-                             @RequestParam(value = "sort", required = false) Integer sort ,
-                             @RequestParam(value = "type", required = false) String type,
-                             @RequestParam(value = "category_id", required = false) Long id);
+
 
 
 

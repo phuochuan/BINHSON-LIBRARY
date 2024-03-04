@@ -20,7 +20,6 @@ public class Librarian  extends Person{
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "roles", joinColumns = @JoinColumn(name = "person_id"))
     private List<String> roles;
-
     public Librarian(String id, String username, List<String> roles) {
         super(id, username);
         this.roles = roles;

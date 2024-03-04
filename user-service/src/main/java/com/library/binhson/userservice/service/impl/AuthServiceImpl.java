@@ -93,6 +93,7 @@ public class AuthServiceImpl implements IAuthService {
             throw new ServerErrorException(500);
         }
         if (Objects.nonNull(userId)) {
+
             User myDBUser = User.builder()
                     .id(userId)
                     .username(registrationRequest.username())
@@ -105,8 +106,9 @@ public class AuthServiceImpl implements IAuthService {
                     .password(passwordEncoder.encode(registrationRequest.password()))
                     .build();
             userRepository.save(myDBUser);
-            keycloakService.setRole(userId, "ROLE_"+ Role.MEMBER);
-            kafkaSendToBrokerService.sendToTopic("Member", modelMapper.map(myDBUser, Member.class) );
+            keycloakService.setRole(userId, "ROLE_" + Role.MEMBER);
+            kafkaSendToBrokerService.sendToTopic("Member", new Member(myDBUser.getId(), myDBUser.getUsername()));
+
         }
         return BaseResponse.builder().message("Registration is successful. ").build();
 
@@ -167,19 +169,18 @@ public class AuthServiceImpl implements IAuthService {
 
     @Override
     public AuthResponse getAccessToken(String authorizationCode) {
-        HashMap<String, String> credentials=githubService.getCredentials(authorizationCode);
+        HashMap<String, String> credentials = githubService.getCredentials(authorizationCode);
         // login=LacHaPhuocHuan
         //name=Phan Phuoc Huan
-        var githubId=credentials.get("id");
-        var username=credentials.get("login");
-        var fullName=credentials.get("name");
-        String[] wordOnName=fullName.split(" ");
-        String firstName=wordOnName[wordOnName.length-1];
-        String lastName=username.concat(firstName);
+        var githubId = credentials.get("id");
+        var username = credentials.get("login");
+        var fullName = credentials.get("name");
+        String[] wordOnName = fullName.split(" ");
+        String firstName = wordOnName[wordOnName.length - 1];
+        String lastName = username.concat(firstName);
 
         return null;
     }
-
 
 
     private boolean validResetPasswordRequest(ResetPasswordRequest resetPasswordRequest) {

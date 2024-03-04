@@ -13,6 +13,7 @@ import javax.naming.Name;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name =  "person_type", discriminatorType = DiscriminatorType.STRING)
