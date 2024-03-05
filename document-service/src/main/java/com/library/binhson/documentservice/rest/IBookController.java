@@ -3,6 +3,7 @@ package com.library.binhson.documentservice.rest;
 import com.library.binhson.documentservice.dto.request.RequestBookDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,17 +12,17 @@ public interface IBookController extends IBaseController{
 
 
     @PostMapping("")
-    @Secured("hasRoles('LIBRARIAN', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_LIBRARIAN')")
     ResponseEntity<?> addBook(@RequestBody RequestBookDto bookDto);
 
     @PatchMapping("/{id}")
-    @Secured("hasRoles('LIBRARIAN', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_LIBRARIAN')")
     ResponseEntity<?> updateBook(@RequestBody RequestBookDto bookDto, @PathVariable("id") String id);
 
     //Ebook book:
-    @PostMapping("/ebooks/{id}/upload")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_LIBRARIAN')")
     ResponseEntity<?> updateEBook(@PathVariable("id") String id, @RequestParam MultipartFile ebook);
-    @GetMapping("/ebooks/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_LIBRARIAN')")
     ResponseEntity<?> updateEBook(@PathVariable("id") String id);
 
 
