@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/v1/document-service/books")
 public interface IBookController extends IBaseController{
 
-
     @PostMapping("")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_LIBRARIAN')")
     ResponseEntity<?> addBook(@RequestBody RequestBookDto bookDto);
@@ -21,9 +20,13 @@ public interface IBookController extends IBaseController{
 
     //Ebook book:
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_LIBRARIAN')")
+    @PatchMapping("/ebook/{id}")
     ResponseEntity<?> updateEBook(@PathVariable("id") String id, @RequestParam MultipartFile ebook);
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_LIBRARIAN')")
-    ResponseEntity<?> updateEBook(@PathVariable("id") String id);
+    @GetMapping("/ebook/{id}")
+    ResponseEntity<?> getEBook(@PathVariable("id") String id);
+
+    //Ebook :
 
 
 

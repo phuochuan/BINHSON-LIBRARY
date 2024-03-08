@@ -4,9 +4,12 @@ import com.library.binhson.documentservice.dto.request.RequestBookDto;
 import com.library.binhson.documentservice.rest.IBookController;
 import com.library.binhson.documentservice.service.common.IBookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,12 +47,16 @@ public class BookController implements IBookController {
     }
 
     @Override
-    public ResponseEntity<?> updateEBook(String id) {
+    public ResponseEntity<?> getEBook(String id) {
         return null;
     }
 
     @Override
     public ResponseEntity<?> search(Integer offset, Integer limit, String key, Integer sort, String type) {
         return null;
+    }
+
+    public List<Link> hateoas(){
+
     }
 }
