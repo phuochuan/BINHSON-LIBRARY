@@ -4,6 +4,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 public interface IBaseController {
     @GetMapping({"", "/"})
     ResponseEntity<?> get(@RequestParam(value = "offset", required = false, defaultValue = "1") Integer offset,
@@ -13,11 +15,7 @@ public interface IBaseController {
     ResponseEntity<?> get(@PathVariable("id") String id);
 
     @GetMapping("/search")
-    ResponseEntity<?> search(@RequestParam(value = "offset", required = false) Integer offset,
-                             @RequestParam(value = "limit", required = false) Integer limit,
-                             @RequestParam(value = "key", required = true) String key,
-                             @RequestParam(value = "sort", required = false) Integer sort ,
-                             @RequestParam(value = "type", required = false) String type);
+    ResponseEntity<?> search(@RequestBody Map<String, String > map);
 
 
     @DeleteMapping("/{id}")

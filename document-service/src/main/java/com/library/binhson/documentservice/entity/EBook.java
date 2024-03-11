@@ -2,11 +2,9 @@ package com.library.binhson.documentservice.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Blob;
 import java.sql.Date;
 import java.util.Set;
 

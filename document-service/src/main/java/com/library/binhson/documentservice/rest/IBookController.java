@@ -1,6 +1,7 @@
 package com.library.binhson.documentservice.rest;
 
 import com.library.binhson.documentservice.dto.request.RequestBookDto;
+import com.library.binhson.documentservice.dto.request.RequestUpdateBookDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,12 +17,12 @@ public interface IBookController extends IBaseController{
 
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_LIBRARIAN')")
-    ResponseEntity<?> updateBook(@RequestBody RequestBookDto bookDto, @PathVariable("id") String id);
+    ResponseEntity<?> updateBook(@RequestBody RequestUpdateBookDto bookDto, @PathVariable("id") String id);
 
     //Ebook book:
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_LIBRARIAN')")
     @PatchMapping("/ebook/{id}")
-    ResponseEntity<?> updateEBook(@PathVariable("id") String id, @RequestParam MultipartFile ebook);
+    void updateEBook(@PathVariable("id") String id, @RequestParam MultipartFile ebook);
     @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_LIBRARIAN')")
     @GetMapping("/ebook/{id}")
     ResponseEntity<?> getEBook(@PathVariable("id") String id);
