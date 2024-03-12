@@ -70,13 +70,17 @@ public class AuthorControllerImpl implements IAuthorController {
 
 
 
+
     @Override
-    public ResponseEntity<?> search(Integer offset, Integer limit, String key, Integer sort, String type) {
-        HashMap<String, String> searchMap=new HashMap<>();
-        searchMap.put("offset", offset+"");
-        searchMap.put("limit", limit+"");
-        searchMap.put("key", key+"");
-        List<AuthorDto> authors = authorService.search(searchMap);
+    public ResponseEntity<?> search(Map<String, String> map) {
+        String sortStr=map.get("sort");
+        List<AuthorDto> authors = authorService.search((HashMap<String, String>) map);
+        Integer sort = null;
+        try{
+            sort=Integer.parseInt(sortStr);
+        }catch (Exception ex){
+
+        }
         if(Objects.nonNull(sort)){
             if(sort>=0)
                 Collections.sort(authors, new Comparator<AuthorDto>() {

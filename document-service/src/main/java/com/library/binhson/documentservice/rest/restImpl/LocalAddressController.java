@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.library.binhson.documentservice.ultil.ResponseUtil.response;
@@ -35,7 +36,17 @@ public class LocalAddressController implements ILocalAddressController {
     }
 
     @Override
-    public ResponseEntity<?> search(Integer offset, Integer limit, String key, Integer sort, String type) {
+    public ResponseEntity<?> search(Map<String, String> map) {
+        Integer offset=1;
+        Integer limit=10;
+        String key="";
+        try{
+            key=map.get("key");
+            offset=Integer.parseInt(map.get("offset"));
+            limit=Integer.parseInt(map.get("limit"));
+        }catch (Exception ex){
+
+        }
         List<StorageAddressDto> storageAddressDtos=addressService.search(offset,limit, key);
         return generateResponse(storageAddressDtos);
     }

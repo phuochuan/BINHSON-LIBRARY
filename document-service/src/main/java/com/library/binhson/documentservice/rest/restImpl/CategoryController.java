@@ -14,10 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.library.binhson.documentservice.ultil.ResponseUtil.response;
@@ -48,8 +45,8 @@ public class CategoryController implements ICategoryController {
     }
 
     @Override
-    public ResponseEntity<?> search(Integer offset, Integer limit, String key, Integer sort, String type) {
-        List<CategoryDto> categoryDtos = categoryService.search(key);
+    public ResponseEntity<?> search(Map<String,String> map) {
+        List<CategoryDto> categoryDtos = categoryService.search(map.get("key"));
         return generateResponse(categoryDtos);
     }
 

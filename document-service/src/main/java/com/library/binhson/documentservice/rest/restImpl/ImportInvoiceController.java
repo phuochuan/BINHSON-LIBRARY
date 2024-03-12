@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.library.binhson.documentservice.ultil.ResponseUtil.response;
@@ -34,7 +35,7 @@ public class ImportInvoiceController implements IImportInvoiceController {
     }
 
     @Override
-    public ResponseEntity<?> search(Integer offset, Integer limit, String key, Integer sort, String type) {
+    public ResponseEntity<?> search(Map<String, String> map) {
         //todo
         return null;
     }

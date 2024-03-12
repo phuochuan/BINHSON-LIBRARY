@@ -8,6 +8,7 @@ import com.library.binhson.documentservice.entity.Book;
 import com.library.binhson.documentservice.rest.*;
 import com.library.binhson.documentservice.service.common.IBookService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.Link;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class BookController implements IBookController {
     private final IBookService bookService;
     @Override
@@ -53,6 +55,7 @@ public class BookController implements IBookController {
 
     @Override
     public ResponseEntity<?> addBook(RequestBookDto bookDto) {
+        log.info("add new book");
         BookDto addedBook=bookService.add(bookDto);
         return generateResponse(addedBook);
     }
@@ -84,6 +87,7 @@ public class BookController implements IBookController {
     public List<Link> hateoas(BookDto dto){
         List<Link> links=new ArrayList<>();
         Link selfLink=linkTo(methodOn(IBookController.class).get(dto.getId())).withSelfRel();
+        links.add(selfLink);
         if(Objects.nonNull(dto.getCategoryIds()) && !dto.getCategoryIds().isEmpty()) {
             dto.getCategoryIds().forEach(categoryId->{
                 if(Objects.nonNull(categoryId))
@@ -100,11 +104,11 @@ public class BookController implements IBookController {
         if(dto.getType().equalsIgnoreCase("ebook")) {
             Link ebookLink = linkTo(methodOn(IBookController.class).getEBook(dto.getId())).withSelfRel();
             links.add(ebookLink);
-        }else if(Objects.nonNull(dto.getType())){
+        }else if( Objects.nonNull(dto.getLocalAddressId())){
             Link addressLink=linkTo(methodOn(ILocalAddressController.class).get(dto.getLocalAddressId()+"")).withRel("Storage Unit Address");
             links.add(addressLink);
         }
-        if(isAdminOrLibrarianPermission()){
+        if(isAdminOrLibrarianPermission() && Objects.nonNull(dto.getImportInvoiceId())){
             Link addressLink=linkTo(methodOn(IImportInvoiceController.class).get(dto.getImportInvoiceId()+"")).withRel("Import Invoice");
             links.add(addressLink);
         }

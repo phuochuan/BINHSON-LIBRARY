@@ -3,6 +3,7 @@ package com.library.binhson.documentservice.ultil.mapper;
 import com.library.binhson.documentservice.dto.BookDto;
 import com.library.binhson.documentservice.dto.request.RequestUpdateBookDto;
 import com.library.binhson.documentservice.entity.Book;
+import com.library.binhson.documentservice.entity.Category;
 import com.library.binhson.documentservice.entity.EBook;
 import com.library.binhson.documentservice.entity.PhysicalBook;
 import com.library.binhson.documentservice.repository.AuthorRepository;
@@ -15,6 +16,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 @Transactional(rollbackFor ={ Exception.class, NotFoundException.class})
@@ -52,11 +54,24 @@ public interface BookMapper {
     }
 
 
+    @Mapping(target = "authors", ignore = true)
+    @Mapping(target = "categories", ignore = true)
     void updatePhysicalBookFromDTO(RequestUpdateBookDto bookDto, @MappingTarget PhysicalBook physicalBook, @Context LocalAddressRepository addressRepository);
     @AfterMapping
     default void customizeMapping(RequestUpdateBookDto bookDto, @MappingTarget PhysicalBook physicalBook, @Context LocalAddressRepository addressRepository){
         physicalBook.setLocalAddress(addressRepository.findById(bookDto.getLocalAddressId()).get());
     }
 
+    @Mapping(target = "authors", ignore = true)
+    @Mapping(target = "categories", ignore = true)
     void updateEBookFromDTO(RequestUpdateBookDto bookDto,@MappingTarget EBook ebook);
+    @Named("mapIdsToCategories")
+    default Set<Category> mapIdsToCategories(Set<Long> categoryIds, @Context CategoryRepository categoryRepository) {
+        return categoryIds.stream()
+                .map(categoryRepository::findById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toSet());
+    }
+
 }

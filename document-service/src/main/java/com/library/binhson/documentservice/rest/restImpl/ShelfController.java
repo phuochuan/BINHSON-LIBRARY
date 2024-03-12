@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.library.binhson.documentservice.ultil.ResponseUtil.response;
@@ -40,7 +41,17 @@ public class ShelfController implements IShelfController {
     }
 
     @Override
-    public ResponseEntity<?> search(Integer offset, Integer limit, String key, Integer sort, String type) {
+    public ResponseEntity<?> search(Map<String,String> map) {
+        int offset=1;
+        int limit=10;
+        String key="";
+        try{
+            key=map.get("key");
+            offset=Integer.parseInt(map.get("offset"));
+            limit=Integer.parseInt(map.get("limit"));
+        }catch (Exception ignored){
+
+        }
         List<ShelfDto> shelfDtos=shelfService.search(offset,limit, key);
         return generateResponse(shelfDtos);
     }

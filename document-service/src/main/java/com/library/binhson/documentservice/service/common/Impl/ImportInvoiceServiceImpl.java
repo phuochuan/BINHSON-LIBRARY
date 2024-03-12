@@ -57,8 +57,8 @@ public class ImportInvoiceServiceImpl implements IImportInvoiceService {
         if(Objects.isNull(invoice.getImportWarehouseDate()))
             invoice.setImportWarehouseDate(new Date());
         String librarianUserName = getUsername();
-        var librarian = librarianRepository.findByUsername(librarianUserName).orElseThrow(() -> new RuntimeException("Server Error"));
-        invoice.setLibrarian(librarian);
+//        var librarian = librarianRepository.findByUsername(librarianUserName).orElseThrow(() -> new RuntimeException("Server Error"));
+//        invoice.setLibrarian(librarian);
         var saveInvoice = importInvoiceRepository.save(invoice);
         return modelMapper.map(saveInvoice, ImportInvoiceDto.class);
     }
