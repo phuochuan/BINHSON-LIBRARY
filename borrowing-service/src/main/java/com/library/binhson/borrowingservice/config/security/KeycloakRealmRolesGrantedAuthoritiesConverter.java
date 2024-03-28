@@ -1,4 +1,4 @@
-package com.library.binhson.documentservice.config.security;
+package com.library.binhson.borrowingservice.config.security;
 
 import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.converter.Converter;

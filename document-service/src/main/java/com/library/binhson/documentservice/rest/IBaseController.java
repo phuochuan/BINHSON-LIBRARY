@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public interface IBaseController {
@@ -15,7 +16,7 @@ public interface IBaseController {
     ResponseEntity<?> get(@PathVariable("id") String id);
 
     @GetMapping("/search")
-    ResponseEntity<?> search(@RequestBody Map<String, String > map);
+    ResponseEntity<?> search(@RequestBody HashMap<String, String > map);
 
 
     @DeleteMapping("/{id}")

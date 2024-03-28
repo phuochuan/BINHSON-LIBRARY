@@ -72,7 +72,7 @@ public class AuthorControllerImpl implements IAuthorController {
 
 
     @Override
-    public ResponseEntity<?> search(Map<String, String> map) {
+    public ResponseEntity<?> search(HashMap<String, String> map) {
         String sortStr=map.get("sort");
         List<AuthorDto> authors = authorService.search((HashMap<String, String>) map);
         Integer sort = null;

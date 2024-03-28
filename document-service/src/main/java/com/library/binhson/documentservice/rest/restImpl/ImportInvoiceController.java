@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,7 +36,7 @@ public class ImportInvoiceController implements IImportInvoiceController {
     }
 
     @Override
-    public ResponseEntity<?> search(Map<String, String> map) {
+    public ResponseEntity<?> search(HashMap<String, String> map) {
         //todo
         return null;
     }

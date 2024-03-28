@@ -12,10 +12,7 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static com.library.binhson.documentservice.ultil.ResponseUtil.success;
 import static org.springframework.hateoas.server.reactive.WebFluxLinkBuilder.linkTo;
@@ -40,7 +37,8 @@ public class RoomController implements IRoomController {
     }
 
     @Override
-    public ResponseEntity<?> search(Map<String,String> map) {
+    public ResponseEntity<?> search(HashMap<String,String> map) {
+
         Integer offset=1;
         Integer limit=10;
         String key="";

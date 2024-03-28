@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -41,7 +42,7 @@ public class ShelfController implements IShelfController {
     }
 
     @Override
-    public ResponseEntity<?> search(Map<String,String> map) {
+    public ResponseEntity<?> search(HashMap<String,String> map) {
         int offset=1;
         int limit=10;
         String key="";

@@ -45,7 +45,7 @@ public class CategoryController implements ICategoryController {
     }
 
     @Override
-    public ResponseEntity<?> search(Map<String,String> map) {
+    public ResponseEntity<?> search(HashMap<String,String> map) {
         List<CategoryDto> categoryDtos = categoryService.search(map.get("key"));
         return generateResponse(categoryDtos);
     }

@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Request;
 import org.apache.james.mime4j.dom.datetime.DateTime;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +54,19 @@ public class BookServiceImpl implements IBookService {
 
     @Override
     public List<BookDto> search(Map<String, String> map) {
-        return null;
+        Integer offset=1;
+        Integer limit=10;
+        String key="";
+        try{
+            key=map.get("key");
+            offset=Integer.parseInt(map.get("offset"));
+            limit=Integer.parseInt(map.get("limit"));
+        }catch (Exception ex){
+        }
+        String finalKey = key;
+        List<BookDto> bookDtos=getAll().stream().filter(book -> book.getName().contains(finalKey)).map(book -> map(book)).toList();
+        PageUtilObject pageUtilObject=new PageUtilObject(limit,offset, new ArrayList<>(bookDtos));
+        return(List<BookDto>) pageUtilObject.getData();
     }
 
     @Override
@@ -68,6 +81,7 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
+    @CacheEvict(value = "books")
     public BookDto add(RequestBookDto bookDto) {
         log.info("Add new book");
         Book addedBook;
@@ -139,6 +153,7 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
+    @CacheEvict(value = "books")
     public BookDto update(RequestUpdateBookDto bookDto, String id) {
         var book = findById(id);
         BookMapper.INSTANCE.updateEntityFromDTO(bookDto, book, authorRepository, categoryRepository, importInvoiceRepository);
