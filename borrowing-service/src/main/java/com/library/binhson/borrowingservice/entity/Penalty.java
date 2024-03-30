@@ -22,7 +22,7 @@ public class Penalty {
     private Double fine;
     @Column(length = 1000000000)
     private String reason;
-    @Column(name = "borrowing_session_id")
+    @JoinColumn(name = "borrowing_session_id")
     @ManyToOne
     private BorrowingSession borrowingSession;
     private PenaltyStatus status;
