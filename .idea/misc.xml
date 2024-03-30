@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="MavenProjectsManager">
@@ -17,6 +18,9 @@
     </option>
     <option name="ignoredFiles">
       <set>
+        <option value="$PROJECT_DIR$/events-service/pom.xml" />
+        <option value="$PROJECT_DIR$/interaction-service/pom.xml" />
+        <option value="$PROJECT_DIR$/reports-statistics-service/pom.xml" />
         <option value="$PROJECT_DIR$/statistics-service/pom.xml" />
       </set>
     </option>

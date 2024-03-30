@@ -12,13 +12,13 @@
         <module name="borrowing-service" />
         <module name="api-gateway" />
         <module name="user-service" />
-        <module name="reports-statistics-service" />
-        <module name="events-service" />
         <module name="document-service" />
-        <module name="interaction-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="events-service" target="17" />
+      <module name="interaction-service" target="17" />
+      <module name="reports-statistics-service" target="17" />
       <module name="statistics-service" target="20" />
     </bytecodeTargetLevel>
   </component>

@@ -39,5 +39,10 @@ public class Book {
     @ManyToOne
     @JoinColumn(name ="import_invoice_Id")
     private ImportInvoice stogreInvoince;
+    @Enumerated(EnumType.STRING)
+    private DegreeOfSignificant degree;
+
+
+
 
 }
