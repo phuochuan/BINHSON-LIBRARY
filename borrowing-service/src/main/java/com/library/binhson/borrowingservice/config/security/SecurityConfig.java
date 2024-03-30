@@ -1,4 +1,4 @@
-package com.library.binhson.documentservice.config.security;
+package com.library.binhson.borrowingservice.config.security;
 
 import com.google.common.net.HttpHeaders;
 import lombok.RequiredArgsConstructor;
@@ -36,17 +36,31 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http, ServerProperties serverProperties) throws Exception {
 
+        // Configure a resource server with JWT decoder (the customized jwtAuthenticationConverter is picked by Spring Boot)
         http.oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()));
+
+        // State-less session (state in access-token only)
         http.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        // Disable CSRF because of state-less session-management
         http.csrf(csrf -> csrf.disable());
 
+        // Return 401 (unauthorized) instead of 302 (redirect to login) when
+        // authorization is missing or invalid
         http.exceptionHandling(eh -> eh.authenticationEntryPoint((request, response, authException) -> {
             response.addHeader(HttpHeaders.WWW_AUTHENTICATE, "Bearer realm=\"Restricted Content\"");
             response.sendError(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase());
         }));
 
+        // If SSL enabled, disable http (https only)
         if (serverProperties.getSsl() != null && serverProperties.getSsl().isEnabled()) {
+            //Kiểm tra xem SSL có được kích hoạt trong cấu hình của ứng dụng không.
+
             http.requiresChannel(channel -> channel.anyRequest().requiresSecure());
+            // phương thức này đặt yêu cầu cho tất cả các yêu cầu HTTP, yêu cầu chúng
+            // phải sử dụng kênh an toàn (https). Điều này có ý nghĩa là nếu một yêu cầu đến
+            // được gửi qua HTTP thay vì HTTPS, nó sẽ được chuyển hướng tự động sang HTTPS để đảm
+            // bảo an toàn trong quá trình truyền tải dữ liệu.
         }
 
         // @formatter:off
