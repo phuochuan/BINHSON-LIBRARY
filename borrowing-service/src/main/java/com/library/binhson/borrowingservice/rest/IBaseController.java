@@ -18,5 +18,5 @@ public interface IBaseController {
 
     @DeleteMapping("/{id}")
     @Secured("hasRoles('LIBRARIAN', 'ADMIN')")
-    ResponseEntity<?> delete( @PathVariable("id") String id);
+    void delete( @PathVariable("id") String id);
 }

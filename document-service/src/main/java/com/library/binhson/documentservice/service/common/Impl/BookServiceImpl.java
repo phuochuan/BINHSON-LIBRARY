@@ -158,7 +158,7 @@ public class BookServiceImpl implements IBookService {
     }
 
     @Override
-    @CacheEvict(value = "books")
+    @CacheEvict(value = "books", allEntries = true)
     public BookDto update(RequestUpdateBookDto bookDto, String id) {
         var book = findById(id);
         boolean isUpdateToKafka= (Objects.nonNull(book.getName()) && !book.getName().equals(bookDto.getName())) || (Objects.nonNull(book.getDegree()) && book.getDegree().equals(bookDto.getDegree()));
