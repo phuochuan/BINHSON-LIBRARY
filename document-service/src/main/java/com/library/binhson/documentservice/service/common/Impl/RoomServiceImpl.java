@@ -5,6 +5,7 @@ import com.library.binhson.documentservice.dto.request.RequestRoomDto;
 import com.library.binhson.documentservice.entity.Room;
 import com.library.binhson.documentservice.repository.RoomRepository;
 import com.library.binhson.documentservice.service.common.IRoomService;
+import com.library.binhson.documentservice.service.thirdparty.KafkaSendToBrokerService;
 import com.library.binhson.documentservice.ultil.PageUtilObject;
 import jakarta.ws.rs.BadRequestException;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class RoomServiceImpl implements IRoomService {
     private final RoomRepository roomRepository;
     private final ModelMapper modelMapper;
+    private final KafkaSendToBrokerService kafkaSendToBrokerService;
     @Override
     public List<RoomDto> get(Integer offset, Integer limit) {
         List<Room> rooms=getAll();
@@ -66,7 +68,11 @@ public class RoomServiceImpl implements IRoomService {
     @Override
     public void delete(String id) {
         Room room=findById(id);
+        boolean isReadingRoom=room.getRoomType().getFunctional().equalsIgnoreCase("reading" )
+                || room.getRoomType().getFunctional().equalsIgnoreCase("read");
         roomRepository.delete(room);
+        if(isReadingRoom)
+            kafkaSendToBrokerService.sendToTopic("delete-room", id);
     }
 
     @Override
@@ -80,6 +86,7 @@ public class RoomServiceImpl implements IRoomService {
                 .name(dto.name())
                 .build();
         room=roomRepository.save(room);
+        // send read room type to kafka.
         return modelMapper.map(room, RoomDto.class);
     }
 
@@ -100,7 +107,6 @@ public class RoomServiceImpl implements IRoomService {
         if (Objects.nonNull(dto.floor())
                 && !dto.floor().trim().isEmpty())
             room.setFloor(dto.floor());
-
         room=roomRepository.save(room);
         return modelMapper.map(room, RoomDto.class);
     }

@@ -1,4 +1,4 @@
-package com.library.binhson.borrowingservice.entity;
+package com.library.binhson.documentservice.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,9 +12,10 @@ import lombok.NoArgsConstructor;
 @Builder
 
 @Entity()
-@Table(name = "tbReadingRoom")
-public class ReadingRoom {
+@Table(name = "tbRoomType")
+public class RoomType {
     @Id
-    private String id;
-    private String name;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String functional;
 }

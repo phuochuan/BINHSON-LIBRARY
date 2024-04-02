@@ -6,6 +6,7 @@ import com.library.binhson.documentservice.dto.request.RequestUpdateBookDto;
 import com.library.binhson.documentservice.entity.*;
 import com.library.binhson.documentservice.repository.*;
 import com.library.binhson.documentservice.service.common.IBookService;
+import com.library.binhson.documentservice.service.thirdparty.KafkaSendToBrokerService;
 import com.library.binhson.documentservice.ultil.PageUtilObject;
 import com.library.binhson.documentservice.ultil.mapper.BookMapper;
 import jakarta.ws.rs.BadRequestException;
@@ -38,6 +39,7 @@ public class BookServiceImpl implements IBookService {
     private final CategoryRepository categoryRepository;
     private final LocalAddressRepository addressRepository;
     private final ImportInvoiceRepository importInvoiceRepository;
+    private final KafkaSendToBrokerService kafkaSendToBrokerService;
 
     @Override
     public List<BookDto> get(Integer offset, Integer limit) {
@@ -78,12 +80,13 @@ public class BookServiceImpl implements IBookService {
             ebookRepository.deleteById(id);
         if (physicalBookRepository.existsById(id))
             physicalBookRepository.deleteById(id);
+        kafkaSendToBrokerService.sendToTopic("deleted-book", id);
+
     }
 
     @Override
     @CacheEvict(value = "books")
     public BookDto add(RequestBookDto bookDto) {
-        log.info("Add new book");
         Book addedBook;
         var book = Book.builder()
                 .id(getBookId())
@@ -103,6 +106,8 @@ public class BookServiceImpl implements IBookService {
             var physicalBook = setPhysicalBook(bookDto, book);
             addedBook = physicalBookRepository.save((physicalBook));
         } else addedBook = bookRepository.save(book);
+        kafkaSendToBrokerService.sendToTopic("new-book", addedBook);
+
         return map(addedBook);
     }
 
@@ -156,8 +161,9 @@ public class BookServiceImpl implements IBookService {
     @CacheEvict(value = "books")
     public BookDto update(RequestUpdateBookDto bookDto, String id) {
         var book = findById(id);
+        boolean isUpdateToKafka= (Objects.nonNull(book.getName()) && !book.getName().equals(bookDto.getName())) || (Objects.nonNull(book.getDegree()) && book.getDegree().equals(bookDto.getDegree()));
         BookMapper.INSTANCE.updateEntityFromDTO(bookDto, book, authorRepository, categoryRepository, importInvoiceRepository);
-        bookRepository.save(book);
+        book=bookRepository.save(book);
         if (physicalBookRepository.existsById(id)) {
             var physicalBook = physicalBookRepository.findById(id).get();
             BookMapper.INSTANCE.updatePhysicalBookFromDTO(bookDto, physicalBook, addressRepository);
@@ -167,6 +173,7 @@ public class BookServiceImpl implements IBookService {
             BookMapper.INSTANCE.updateEBookFromDTO(bookDto, ebook);
             ebookRepository.save(ebook);
         }
+        if(isUpdateToKafka)  kafkaSendToBrokerService.sendToTopic("update-book", book);
         return map(book);
     }
 

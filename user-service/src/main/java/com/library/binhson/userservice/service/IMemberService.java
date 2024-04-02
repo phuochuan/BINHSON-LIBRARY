@@ -8,4 +8,5 @@ public interface IMemberService {
     List<UserDto> getMember(int i, int i1);
 
     Object findById(String memberId);
+
 }

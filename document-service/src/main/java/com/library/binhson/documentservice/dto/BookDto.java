@@ -41,4 +41,6 @@ public class BookDto extends RepresentationModel<BookDto> {
     private Float size;
     private String fileName;
     private Date generatedDate;
+    private DegreeOfSignificant degree;
+
 }

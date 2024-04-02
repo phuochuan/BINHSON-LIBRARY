@@ -145,6 +145,13 @@
 			<version>2.9.4</version>
 		</dependency>
 
+		<!--		KAFKA     -->
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+		</dependency>
+		<!--		          -->
+
 
 
 	</dependencies>

@@ -9,6 +9,7 @@ import com.library.binhson.userservice.repository.UserRepository;
 import com.library.binhson.userservice.service.IUserService;
 import com.library.binhson.userservice.service.third_party_system.kafka.UserKafkaSendToBrokerService;
 import com.library.binhson.userservice.service.third_party_system.keycloak.KeycloakService;
+import com.library.binhson.userservice.ultils.QRUtils;
 import com.library.binhson.userservice.ultils.ValidAuthUtil;
 import jakarta.ws.rs.BadRequestException;
 import lombok.RequiredArgsConstructor;
@@ -64,6 +65,8 @@ public class UserServiceImpl implements IUserService {
                 .email(registrationRequest.email())
                 .build();
         var saveUser=userRepository.save(myDBUser);
+        saveUser.setQR(QRUtils.generateQRCode(saveUser));
+        saveUser=userRepository.save(saveUser);
         keycloakService.setRole(userId, "ROLE_" + registrationRequest.role().name());
         var finalUser=modelMapper.map(saveUser, UserDto.class);
         finalUser.setIdentityLibraryCode(saveUser.getId());
@@ -76,6 +79,8 @@ public class UserServiceImpl implements IUserService {
 
         return finalUser;
     }
+
+
 
     @Override
     public void disableUser(String id) {

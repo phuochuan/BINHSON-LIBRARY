@@ -19,4 +19,7 @@ public class Room {
     private Integer id;
     private String name;
     private String floor;
+    @ManyToOne
+    @JoinColumn(name = "room_type_id")
+    private RoomType roomType;
 }

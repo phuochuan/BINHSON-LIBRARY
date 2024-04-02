@@ -7,6 +7,7 @@ import com.library.binhson.documentservice.dto.response.BaseResponse;
 import com.library.binhson.documentservice.entity.Book;
 import com.library.binhson.documentservice.rest.*;
 import com.library.binhson.documentservice.service.common.IBookService;
+import com.library.binhson.documentservice.service.thirdparty.KafkaSendToBrokerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.Link;

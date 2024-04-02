@@ -29,5 +29,7 @@ public class RequestUpdateBookDto {
     private Float height;
     private Float weight;
     private Float depreciation;
+    private DegreeOfSignificant degree;
+
 
 }

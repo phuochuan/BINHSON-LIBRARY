@@ -35,6 +35,9 @@ public class User {
     @OneToOne
     @JoinColumn(name = "citizen_identity_id",referencedColumnName = "noDot")
     private CitizenIdentityCard citizenIdentityCard;
+    @Lob
+    @Column(name = "QR", columnDefinition="LONGBLOB")
+    private byte[] QR;
 
 
 }
