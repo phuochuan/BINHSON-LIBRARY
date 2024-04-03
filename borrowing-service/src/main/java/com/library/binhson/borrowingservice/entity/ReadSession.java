@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.joda.time.DateTime;
 
 import java.util.Date;
 
@@ -19,7 +20,7 @@ public class ReadSession {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Date timeOfStarting;
+    private DateTime timeOfStarting;
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
