@@ -23,7 +23,9 @@ import static com.library.binhson.borrowingservice.utils.ResponseUtil.response;
 public class ReadingSessionControllerImpl implements IReadingSessionController {
     private final IReadingSessionService readingSessionService;
     @Override
-    public ResponseEntity<?> get(int offset, int limit) {
+    public ResponseEntity<?> get(
+            int offset, int limit//
+    ) {
         DataPage dataPage=readingSessionService.get(offset,limit);
         return generateResponse(dataPage);
     }

@@ -26,6 +26,4 @@ public class Penalty {
     @ManyToOne
     private BorrowingSession borrowingSession;
     private PenaltyStatus status;
-
-
 }

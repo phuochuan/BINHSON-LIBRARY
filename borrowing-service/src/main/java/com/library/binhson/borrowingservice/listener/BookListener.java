@@ -8,12 +8,14 @@ import com.library.binhson.borrowingservice.repository.BookRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 @AllArgsConstructor
 public class BookListener {
     private final BookRepository bookRepository;
-    @KafkaListener(id = "brrowing-service_new-book", topics = "new-book")
+    @KafkaListener(id = "borrowing-service_new-book", topics = "new-book")
     public void listenNewBook(String jsonPayload){
         try {
             var objectMapper =getObjectMapper();

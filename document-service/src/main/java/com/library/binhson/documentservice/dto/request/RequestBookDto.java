@@ -21,7 +21,6 @@ public record RequestBookDto(String name,
                              //100-0 %.
                              Float depreciation,
                              Float size,
-                             String fileName,
-                             Date generatedDate
+                             String fileName
 ) {
 }

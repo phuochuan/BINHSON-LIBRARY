@@ -31,6 +31,7 @@ public class BorrowingSession {
 
     @Enumerated(EnumType.STRING)
     private BorrowingType borrowingType;
+    private SessionStatus status;
 
 
 }

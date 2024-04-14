@@ -51,6 +51,7 @@ public class KeycloakService {
         var response = realmResource.users().create(user);
         return getUserId(response);
     }
+
     private static UserRepresentation getUserRepresentation(RegistrationRequest registrationRequest, boolean isResetPassword) {
         UserRepresentation user = new UserRepresentation();
         user.setUsername(registrationRequest.username());

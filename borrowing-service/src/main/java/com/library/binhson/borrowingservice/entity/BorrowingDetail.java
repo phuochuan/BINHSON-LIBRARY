@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 
 @Entity()
-@Table(name = "tbBorrowingSession")
+@Table(name = "tbBorrowingSessionDetail")
 public class BorrowingDetail {
     @EmbeddedId
     private  BorrowingDetailId borrowingDetailId;

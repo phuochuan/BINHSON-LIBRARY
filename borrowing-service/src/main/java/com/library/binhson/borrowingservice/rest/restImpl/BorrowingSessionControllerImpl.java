@@ -26,7 +26,9 @@ import static com.library.binhson.borrowingservice.utils.ResponseUtil.response;
 public class BorrowingSessionControllerImpl implements IBorrowingSessionController {
     private final IBorrowingSessionService borrowingSessionService;
     @Override
-    public ResponseEntity<?> get(int offset, int limit) {
+    public ResponseEntity<?> get(
+            int offset, int limit
+    ) {
         DataPage dataPage=borrowingSessionService.get(offset, limit);
         return generateResponse(dataPage);
     }
@@ -72,8 +74,14 @@ public class BorrowingSessionControllerImpl implements IBorrowingSessionControll
 
 
     @Override
-    public ResponseEntity<?> reservation(BorrowingSessionRequest request) {
+    public ResponseEntity<?> borrow(BorrowingSessionRequest request) {
         BorrowingSessionDto dto=borrowingSessionService.addNewSession(request.getBookIds(),request.getMemberId());
+        return generateResponse(dto);
+    }
+
+    @Override
+    public ResponseEntity<?> reservation(BorrowingSessionRequest request) {
+        BorrowingSessionDto dto=borrowingSessionService.addNewSession(request.getBookIds());
         return generateResponse(dto);
     }
 

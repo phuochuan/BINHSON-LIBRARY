@@ -49,7 +49,6 @@ public class BookController implements IBookController {
         return generateResponse(bookDtos);
     }
 
-
     @Override
     public ResponseEntity<?> delete(String id) {
         bookService.deleteById(id);
@@ -102,8 +101,8 @@ public class BookController implements IBookController {
                     links.add(linkTo(methodOn(IAuthorController.class).get(authorId + "")).withRel("author"));
             });
         }
-
-        if (dto.getType().equalsIgnoreCase("ebook")) {
+        String type=dto.getType();
+        if (Objects.nonNull(type) && type.equalsIgnoreCase("ebook")) {
             Link ebookLink = linkTo(methodOn(IBookController.class).getEBook(dto.getId())).withSelfRel();
             links.add(ebookLink);
         } else if (Objects.nonNull(dto.getLocalAddressId())) {

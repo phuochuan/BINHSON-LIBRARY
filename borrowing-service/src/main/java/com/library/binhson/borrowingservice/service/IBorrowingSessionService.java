@@ -18,4 +18,6 @@ public interface IBorrowingSessionService {
     BorrowingSessionDto addNewSession(List<String> bookIds, String memberId);
 
     BorrowingSessionDto renewSession(Long id);
+
+    BorrowingSessionDto addNewSession(List<String> bookIds);
 }

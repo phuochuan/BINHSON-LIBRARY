@@ -1,6 +1,7 @@
 package com.library.binhson.borrowingservice.dto;
 
 import com.library.binhson.borrowingservice.entity.BorrowingType;
+import com.library.binhson.borrowingservice.entity.SessionStatus;
 import lombok.AllArgsConstructor;
 
 import lombok.Builder;
@@ -22,4 +23,5 @@ public class BorrowingSessionDto extends RepresentationModel<BorrowingSessionDto
     private DateTime estimateBookReturnDate;
     private BorrowingType borrowingType;
     private List<BookDto> bookDtos;
+    private SessionStatus status;
 }

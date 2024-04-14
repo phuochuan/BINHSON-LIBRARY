@@ -11,8 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/v1/document-service/books")
 public interface IBookController extends IBaseController{
 
-    @PostMapping("")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_LIBRARIAN')")
+    @PostMapping({"","/"})
+    @Secured({ "ROLE_ADMIN", "ROLE_LIBRARIAN" })
     ResponseEntity<?> addBook(@RequestBody RequestBookDto bookDto);
 
     @PatchMapping("/{id}")

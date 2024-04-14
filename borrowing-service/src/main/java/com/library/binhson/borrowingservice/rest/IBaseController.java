@@ -8,7 +8,9 @@ import java.util.HashMap;
 
 public interface IBaseController {
     @GetMapping({"","/"})
-    public ResponseEntity<?> get(@RequestParam(name = "offset") int offset, @RequestParam(value = "limit", defaultValue = "100") int limit);
+    public ResponseEntity<?> get(
+            @RequestParam(name = "offset") int offset, @RequestParam(name = "limit", defaultValue = "100") int limit
+    );
 
     @GetMapping("/{id}")
     ResponseEntity<?> get(@PathVariable("id") String id);

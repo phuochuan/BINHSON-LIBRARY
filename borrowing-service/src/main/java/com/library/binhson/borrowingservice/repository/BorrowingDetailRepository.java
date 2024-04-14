@@ -11,5 +11,5 @@ import java.util.List;
 
 @Repository
 public interface BorrowingDetailRepository extends JpaRepository<BorrowingDetail, BorrowingDetailId> {
-    List<Book> findByBorrowingSession(BorrowingSession bs);
+    List<BorrowingDetail> findByBorrowingSession(BorrowingSession bs);
 }

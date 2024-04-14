@@ -96,8 +96,12 @@ public class BookServiceImpl implements IBookService {
                 .name(bookDto.name())
                 .quality(bookDto.quality())
                 .republishTime(bookDto.republish_time())
-                .stogreInvoince(importInvoiceRepository.findById(bookDto.stogre_invoince_id()).orElseThrow())
                 .build();
+
+        if(Objects.nonNull(bookDto.stogre_invoince_id())) {
+            var inst=importInvoiceRepository.findById(bookDto.stogre_invoince_id()).orElseThrow();
+            book.setStogreInvoince(inst);
+        }
 
         if (bookDto.book_style().equalsIgnoreCase("ebook")) {
             var ebook = setEbook(bookDto, (book));
@@ -107,7 +111,6 @@ public class BookServiceImpl implements IBookService {
             addedBook = physicalBookRepository.save((physicalBook));
         } else addedBook = bookRepository.save(book);
         kafkaSendToBrokerService.sendToTopic("new-book", addedBook);
-
         return map(addedBook);
     }
 

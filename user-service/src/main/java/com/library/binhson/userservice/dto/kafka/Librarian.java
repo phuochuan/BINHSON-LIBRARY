@@ -8,10 +8,15 @@ import lombok.NoArgsConstructor;
 
 
 @Data
+
 public class Librarian extends Person{
     private Role role;
     public Librarian(String id, String username, Role role) {
         super(id, username);
+        this.role = role;
+    }
+
+    public Librarian(Role role) {
         this.role = role;
     }
 }

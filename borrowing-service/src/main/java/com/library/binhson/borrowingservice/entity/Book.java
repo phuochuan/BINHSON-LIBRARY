@@ -1,5 +1,6 @@
 package com.library.binhson.borrowingservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -16,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Entity
 @Table(name = "tbBook")
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Book {
     @Id
     private String id;

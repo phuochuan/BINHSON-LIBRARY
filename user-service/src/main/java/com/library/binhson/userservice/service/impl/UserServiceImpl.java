@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(rollbackFor = Exception.class)
 public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
@@ -54,7 +56,9 @@ public class UserServiceImpl implements IUserService {
             throw new BadRequestException();
         if(userRepository.existsByEmail(registrationRequest.email()))
             throw new BadRequestException("Email was applied to another account before.");
-        String userId= keycloakService.registerUser(modelMapper.map(registrationRequest, RegistrationRequest.class),true);
+        String userId= keycloakService.registerUser(new RegistrationRequest(registrationRequest.username(),
+                registrationRequest.email(), registrationRequest.password(), registrationRequest.firstName(),
+                registrationRequest.lastName(), registrationRequest.date_of_birth()),true);
         User myDBUser= User.builder()
                 .id(userId)
                 .username(registrationRequest.username())
@@ -70,11 +74,11 @@ public class UserServiceImpl implements IUserService {
         keycloakService.setRole(userId, "ROLE_" + registrationRequest.role().name());
         var finalUser=modelMapper.map(saveUser, UserDto.class);
         finalUser.setIdentityLibraryCode(saveUser.getId());
-
         if(registrationRequest.role().equals(Role.MEMBER))
-            kafkaSendToBrokerService.sendToTopic("Member", modelMapper.map(myDBUser, Member.class) );
+            kafkaSendToBrokerService.sendToTopic("Member", new Member(finalUser.getIdentityLibraryCode(), finalUser.getUsername()
+            ) );
         else if(registrationRequest.role().equals(Role.LIBRARIAN))
-            kafkaSendToBrokerService.sendToTopic("Librarian", modelMapper.map(myDBUser, Librarian.class) );
+            kafkaSendToBrokerService.sendToTopic("Librarian", new Librarian(finalUser.getIdentityLibraryCode(), finalUser.getUsername(), Role.LIBRARIAN) );
 
 
         return finalUser;

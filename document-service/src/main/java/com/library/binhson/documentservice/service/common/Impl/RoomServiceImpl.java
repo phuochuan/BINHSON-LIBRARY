@@ -86,7 +86,7 @@ public class RoomServiceImpl implements IRoomService {
                 .name(dto.name())
                 .build();
         room=roomRepository.save(room);
-        // send read room type to kafka.
+        kafkaSendToBrokerService.sendToTopic("new-room", room);
         return modelMapper.map(room, RoomDto.class);
     }
 

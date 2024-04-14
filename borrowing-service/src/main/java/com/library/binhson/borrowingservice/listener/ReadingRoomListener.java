@@ -9,11 +9,15 @@ import com.library.binhson.borrowingservice.repository.ReadingRoomRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Component;
+
 @AllArgsConstructor
 @Slf4j
+@Component
+
 public class ReadingRoomListener {
     private final ReadingRoomRepository readingRoomRepository;
-    @KafkaListener(id = "brrowing-service_new-room", topics = "new-room")
+    @KafkaListener(id = "borrowing-service_new-room", topics = "new-room")
     public void listenNewBook(String jsonPayload){
         try {
             ReadingRoom room=convertToRoom(jsonPayload);
@@ -29,7 +33,7 @@ public class ReadingRoomListener {
         return objectMapper;
     }
 
-    @KafkaListener(id = "borrowing-service_delete-room", topics = "deleted-book")
+    @KafkaListener(id = "borrowing-service_delete-room", topics = "deleted-room")
     public void listenUpdateBook(String jsonPayload){
         try{
 
