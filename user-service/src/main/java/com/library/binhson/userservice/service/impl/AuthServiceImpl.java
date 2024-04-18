@@ -107,7 +107,7 @@ public class AuthServiceImpl implements IAuthService {
                     .build();
             userRepository.save(myDBUser);
             keycloakService.setRole(userId, "ROLE_" + Role.MEMBER);
-            kafkaSendToBrokerService.sendToTopic("Member", new Member(myDBUser.getId(), myDBUser.getUsername()));
+            kafkaSendToBrokerService.sendToTopic("Member", new Member(myDBUser.getId(), myDBUser.getUsername(), myDBUser.getDateOfBirth()));
 
         }
         return BaseResponse.builder().message("Registration is successful. ").build();

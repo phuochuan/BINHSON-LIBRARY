@@ -75,10 +75,10 @@ public class UserServiceImpl implements IUserService {
         var finalUser=modelMapper.map(saveUser, UserDto.class);
         finalUser.setIdentityLibraryCode(saveUser.getId());
         if(registrationRequest.role().equals(Role.MEMBER))
-            kafkaSendToBrokerService.sendToTopic("Member", new Member(finalUser.getIdentityLibraryCode(), finalUser.getUsername()
+            kafkaSendToBrokerService.sendToTopic("Member", new Member(finalUser.getIdentityLibraryCode(), finalUser.getUsername(),finalUser.getDateOfBirth()
             ) );
         else if(registrationRequest.role().equals(Role.LIBRARIAN))
-            kafkaSendToBrokerService.sendToTopic("Librarian", new Librarian(finalUser.getIdentityLibraryCode(), finalUser.getUsername(), Role.LIBRARIAN) );
+            kafkaSendToBrokerService.sendToTopic("Librarian", new Librarian(finalUser.getIdentityLibraryCode(), finalUser.getUsername(),finalUser.getDateOfBirth(), Role.LIBRARIAN) );
 
 
         return finalUser;
