@@ -1,10 +1,9 @@
 package com.library.binhson.paymentservice.notifications.intercepter;
 
-import com.library.binhson.paymentservice.keycloakservice.AuthService;
+import com.library.binhson.paymentservice.service.keycloakservice.AuthService;
 import com.library.binhson.paymentservice.notifications.sessionmanagerment.WebsocketUserSessionStore;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.keycloak.representations.AccessToken;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;

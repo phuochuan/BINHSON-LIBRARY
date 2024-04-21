@@ -1,4 +1,4 @@
-package com.library.binhson.paymentservice.keycloakservice;
+package com.library.binhson.paymentservice.service.keycloakservice;
 
 import lombok.RequiredArgsConstructor;
 import org.keycloak.admin.client.Keycloak;

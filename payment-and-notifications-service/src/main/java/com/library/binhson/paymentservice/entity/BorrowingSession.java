@@ -1,5 +1,6 @@
 package com.library.binhson.paymentservice.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,9 +21,11 @@ import org.joda.time.DateTime;
 
 @NamedQuery(name = "BorrowingSession.findByOverdue",
 query = "SELECT bs FROM BorrowingSession bs WHERE bs.completed = false AND FUNCTION('DATEDIFF', bs.estimateBookReturnDate, CURRENT_DATE) = 0")
+
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class BorrowingSession {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
     @JoinColumn(name = "member_id")
