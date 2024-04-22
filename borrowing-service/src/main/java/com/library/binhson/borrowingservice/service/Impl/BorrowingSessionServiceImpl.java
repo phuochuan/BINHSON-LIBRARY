@@ -25,13 +25,15 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class BorrowingSessionServiceImpl implements IBorrowingSessionService {
+public class BorrowingSessionServiceImpl implements IBorrowingSessionService
+{
     private final BorrowingSessionRepository sessionRepository;
     private final BorrowingDetailRepository detailRepository;
     private final BookRepository bookRepository;
     private final MemberRepository memberRepository;
     private final ModelMapper modelMapper;
     private final PersonRepository personRepository;
+    private final KafkaSendToBrokerService kafkaSendToBrokerService;
 
 
     @Override
@@ -104,6 +106,7 @@ public class BorrowingSessionServiceImpl implements IBorrowingSessionService {
                 session.setLibrarian((Librarian) getCurrentUser());
             } else session.setBorrowingType(BorrowingType.Reserve);
             session = sessionRepository.save(session);
+            kafkaSendToBrokerService.sendToTopic("borrowing", session);
             saveDetails(books, session);
             return map(session);
         } else
@@ -150,6 +153,13 @@ public class BorrowingSessionServiceImpl implements IBorrowingSessionService {
         Member member = (Member) getCurrentUser();
         List<Book> books = bookRepository.findAllById(bookIds);
         return createSession(member, false, books);
+    }
+
+    @Override
+    public void completeSession(Long id) {
+        var ss=findById(id);
+        ss.setStatus(SessionStatus.End);
+        sessionRepository.save(ss);
     }
 
     @Cacheable(value = "borrowing-sessions")

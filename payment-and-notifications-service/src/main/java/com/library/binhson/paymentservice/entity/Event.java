@@ -16,7 +16,7 @@ import org.joda.time.DateTime;
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @Enumerated(EnumType.STRING)
     public EventType eventType;
     @Column(length = 20000)

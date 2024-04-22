@@ -21,4 +21,8 @@ public interface IBorrowingSessionController extends IBaseController{
     @Secured("hasRoles({'ROLE_LIBRARIAN','ROLE_ADMIN', 'ROLE_MEMBER')")
     @PostMapping("/renewal/{id}")
     ResponseEntity<?> renew(@PathVariable("id") Long id);
+
+    @Secured("hasRoles({'ROLE_LIBRARIAN','ROLE_ADMIN')")
+    @PostMapping("/completion/{id}")
+    void completeSession(@PathVariable("id") Long id);
 }

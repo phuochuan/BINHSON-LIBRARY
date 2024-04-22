@@ -16,11 +16,14 @@ import org.joda.time.DateTime;
 
 @NamedQuery(
         name = "BorrowingSession.findToDonNotCompleteAndGoingEndDate",
-        query = "SELECT bs FROM BorrowingSession bs WHERE bs.completed = false AND FUNCTION('DATEDIFF', bs.estimateBookReturnDate, CURRENT_DATE) = 1"
+        query = "SELECT bs FROM BorrowingSession bs WHERE bs.completed = false AND bs.estimateBookReturnDate = :endDate"
 )
 
-@NamedQuery(name = "BorrowingSession.findByOverdue",
-query = "SELECT bs FROM BorrowingSession bs WHERE bs.completed = false AND FUNCTION('DATEDIFF', bs.estimateBookReturnDate, CURRENT_DATE) = 0")
+@NamedQuery(
+        name = "BorrowingSession.findByOverdue",
+        query = "SELECT bs FROM BorrowingSession bs WHERE bs.completed = false AND bs.estimateBookReturnDate < :currentDate"
+)
+
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)

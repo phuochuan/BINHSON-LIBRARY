@@ -35,7 +35,7 @@ public class ScheduledBookBorrowingNotification {
                 "    \"Thank you for your cooperation in keeping our library resources available to all members.\\n\\n\" +\n" +
                 "    \"Best regards,\\n\" +\n";
         try {
-            List<BorrowingSession> goingEndDateSessions = borrowingSessionRepository.findToDonNotCompleteAndGoingEndDate();
+            List<BorrowingSession> goingEndDateSessions = borrowingSessionRepository.findToDonNotCompleteAndGoingEndDate(DateTime.now().minusDays(1));
             assert Objects.nonNull(goingEndDateSessions) && !goingEndDateSessions.isEmpty();
             Event event = Event
                     .builder()
@@ -74,8 +74,7 @@ public class ScheduledBookBorrowingNotification {
                         "Best regards,\n" +
                         "Binh Son Library";
         try {
-            List<BorrowingSession> goingEndDateSessions = borrowingSessionRepository.findByOverdue();
-            assert goingEndDateSessions != null && !goingEndDateSessions.isEmpty();
+            List<BorrowingSession> goingEndDateSessions = borrowingSessionRepository.findByOverdue(DateTime.now());
             Event event = Event
                     .builder()
                     .eventType(EventType.OVERDUE_BOOK_NOTICE)
@@ -84,16 +83,17 @@ public class ScheduledBookBorrowingNotification {
                     .dateAt(DateTime.now())
                     .build();
             event = eventRepository.save(event);
+            log.info("BorrowingSession Size: " + goingEndDateSessions.size());
             for (BorrowingSession bs : goingEndDateSessions) {
+                log.info("BorrowingSession: " + bs.getId());
                 try {
                     Notifications notifications = Notifications.builder()
-                            .content("Dear " + bs.getMember() + ",\n" + message)
+                            .content("Dear " + bs.getMember().getUsername() + ",\n" + message)
                             .event(event)
                             .user(bs.getMember())
                             .build();
                     notificationRepository.save(notifications);
                 } catch (Exception ignored) {
-
                 }
             }
             websocketPublisher.publish(event.getId());

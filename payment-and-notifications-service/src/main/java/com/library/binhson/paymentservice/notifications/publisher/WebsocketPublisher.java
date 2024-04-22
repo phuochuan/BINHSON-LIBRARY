@@ -15,8 +15,7 @@ import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -31,8 +30,6 @@ public class WebsocketPublisher {
     public void publish(Long eventId){
         Event event=eventRepository.findById(eventId).orElseThrow(NotFoundException::new);
         List<Notifications> notifications=notificationRepository.findByEvent(event);
-        assert notifications != null;
-        List<String> userIds=notifications.stream().map(nt->nt.getUser().getId()).toList();
         try {
             Map<String, String> sessionIds =websocketUserSessionStore.getDataMap();
             for (Notifications notf : notifications) {
@@ -42,13 +39,10 @@ public class WebsocketPublisher {
 //                            "Huan dep trai",
 //                            toMessageHeaders(ssId)
 //                    );
-                    var ssId=sessionIds.get(notf.getUser().getId());
-                    assert ssId!=null && !ssId.isEmpty();
-                    simpMessagingTemplate.convertAndSend("/user/"+ssId+"/queue/notification", notifications, toMessageHeaders(ssId));
+                    var ssId=websocketUserSessionStore.getSessionIds(Collections.singletonList(notf.getUser().getId())).get(0);
+                    simpMessagingTemplate.convertAndSend("/user/"+ssId+"/queue/notification", notf.getContent(), toMessageHeaders(ssId));
                 } catch (Exception ex) {
-                    log.error(ex.getMessage());
-                    log.error(String.valueOf(ex.getCause()));
-
+                    ex.printStackTrace();
                 }
             }
         }catch(Exception ex1){

@@ -22,6 +22,7 @@ import java.util.List;
 
 @DiscriminatorValue("Librarian")
 @JsonIgnoreProperties(ignoreUnknown = true)
+
 public class Librarian  extends Person {
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "roles", joinColumns = @JoinColumn(name = "person_id"))

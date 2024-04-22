@@ -14,7 +14,7 @@ import java.io.IOException;
 @Component
 public class KafkaUserListener {
     private final CustomerRepository userRepository;
-    @KafkaListener(id="payment_and_notification_service", topics = "Member")
+    @KafkaListener(id="payment_and_notification_service_member", topics = "Member")
     public void listenerRegistrationAction(String jsonPayload) throws IOException {
         save(jsonPayload);
     }
@@ -26,7 +26,7 @@ public class KafkaUserListener {
         userRepository.save(member);
     }
 
-    @KafkaListener(id="payment_and_notification_service", topics = "Librarian")
+    @KafkaListener(id="payment_and_notification_service_librarian", topics = "Librarian")
     public void listenerCreatingLibrarianAction(String jsonPayload) throws IOException{
         save(jsonPayload);
 

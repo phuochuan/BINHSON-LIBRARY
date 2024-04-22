@@ -17,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BorrowingSessionDto extends RepresentationModel<BorrowingSessionDto> {
+    private Long id;
     private UserDto member;
     private UserDto librarian;
     private DateTime startDate;

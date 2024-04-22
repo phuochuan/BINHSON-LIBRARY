@@ -91,4 +91,9 @@ public class BorrowingSessionControllerImpl implements IBorrowingSessionControll
         BorrowingSessionDto dto=borrowingSessionService.renewSession(id);
         return generateResponse(dto);
     }
+
+    @Override
+    public void completeSession(Long id) {
+        borrowingSessionService.completeSession(id);
+    }
 }

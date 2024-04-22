@@ -14,7 +14,6 @@ import java.util.concurrent.locks.ReentrantLock;
 @Slf4j
 public class WebsocketUserSessionStore {
     private final Lock lock = new ReentrantLock();
-    // đảm bảo rằng chỉ có một luồng có thể truy cập vào một phần của mã tại một thời điểm
     private final Map<String, String> store = new HashMap<>();
 
     public void add(String sessionId, String userId) {
@@ -24,6 +23,7 @@ public class WebsocketUserSessionStore {
             store.put(sessionId, userId);
         } finally {
             lock.unlock();
+            log.info("store : "+store.size());
         }
     }
 
@@ -52,6 +52,7 @@ public class WebsocketUserSessionStore {
             if(userIds.contains(entry.getValue().trim()))
                 sessionIds.add(entry.getKey());
         }
+        log.info("store : "+store.size());
         return sessionIds;
     }
 
@@ -64,6 +65,7 @@ public class WebsocketUserSessionStore {
     }
 
     public Map<String, String> getDataMap() {
+        log.info("store HashMap: "+store.size());
         return new HashMap<>(store);
     }
 }

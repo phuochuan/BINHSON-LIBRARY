@@ -20,15 +20,13 @@ public class WebsocketAuthInterceptor implements ChannelInterceptor {
     private final WebsocketUserSessionStore sessionStore;
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
-        log.info("preSend socket");
         StompHeaderAccessor accessor= MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
         assert accessor != null;
         String sessionId= (String) accessor.getMessageHeaders().get("simpSessionId");
-        log.info("Session: "+sessionId);
         if(StompCommand.CONNECT==accessor.getCommand()){
             String jwtToken= (String) accessor.getFirstNativeHeader("Authorization");
-            log.info("JWT"+ jwtToken);
             String userId=authService.verifyJwt(jwtToken);
+            log.info("User id: "+ userId);
             sessionStore.add(sessionId,userId);
         }else if(StompCommand.DISCONNECT==accessor.getCommand()){
             sessionStore.removeBySession(sessionId);
